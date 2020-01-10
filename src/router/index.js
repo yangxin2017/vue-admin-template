@@ -78,6 +78,22 @@ export const constantRoutes = [
   },
 
   {
+    path: '/page',
+    component: Layout,
+    redirect: '/page/list',
+    name: '页面管理',
+    meta: { title: 'Page', icon: 'dashboard' },
+    children: [
+      {
+        path: 'list',
+        name: '页面列表',
+        component: () => import('@/views/page/list/index'),
+        meta: { title: 'Page list', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
     path: '/form',
     component: Layout,
     children: [
