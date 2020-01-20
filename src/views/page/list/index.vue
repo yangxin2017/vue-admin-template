@@ -23,8 +23,8 @@
             :h="item.h"
             :i="item.i"
           >
-            <el-card shadow="hover" class="card-box">
-              <div style="height:200px;background:#f00;" @drop="dropHandle($event, item)" @dragover="allowDrop($event)">{{ item.i }}
+            <el-card shadow="hover" class="card-box" @drop.native="dropHandle($event, item)" @dragover.native="allowDrop($event)">
+              <div>{{ item.i }}
               </div>
             </el-card>
           </grid-item>
@@ -40,6 +40,7 @@
           >
             <div draggable="true" @dragstart="dragStart($event, item)">
               {{ item.name }}
+              <comrender html="<com-one mes='asf' />" />
             </div>
           </el-card>
         </div>
@@ -51,11 +52,13 @@
 
 <script>
 import VueGridLayout from 'vue-grid-layout'
+import comrender from '@/views/components/render'
 
 export default {
   components: {
     GridLayout: VueGridLayout.GridLayout,
-    GridItem: VueGridLayout.GridItem
+    GridItem: VueGridLayout.GridItem,
+    comrender: comrender
   },
   data() {
     return {
@@ -70,12 +73,12 @@ export default {
         { 'x': 8, 'y': 13, 'w': 4, 'h': 5, 'i': '7' }
       ],
       mcoms: [
-        { id: 1, name: '1' },
-        { id: 2, name: '2' },
-        { id: 3, name: '3' },
-        { id: 4, name: '4' },
-        { id: 5, name: '5' },
-        { id: 6, name: '6' }
+        { id: 1, name: '1', img: '', comtag: '', params: '' },
+        { id: 2, name: '2', img: '', comtag: '', params: '' },
+        { id: 3, name: '3', img: '', comtag: '', params: '' },
+        { id: 4, name: '4', img: '', comtag: '', params: '' },
+        { id: 5, name: '5', img: '', comtag: '', params: '' },
+        { id: 6, name: '6', img: '', comtag: '', params: '' }
       ]
     }
   },
