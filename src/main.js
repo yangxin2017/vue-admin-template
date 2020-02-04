@@ -5,6 +5,7 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 // import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+import echarts from 'echarts'
 
 import '@/styles/index.scss' // global css
 
@@ -14,7 +15,6 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -27,6 +27,8 @@ import { mockXHR } from '../mock'
 if (process.env.NODE_ENV === 'development') {
   mockXHR()
 }
+
+Vue.prototype.$echarts = echarts
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })

@@ -94,6 +94,35 @@ export const constantRoutes = [
   },
 
   {
+    path: '/cms',
+    redirect: '/cms/main',
+    component: () => import('@/views/project/cms/container'),
+    children: [
+      {
+        path: 'main',
+        name: '首页',
+        component: () => import('@/views/project/cms/index')
+      },
+      {
+        path: 'detail',
+        name: '详情',
+        component: () => import('@/views/project/cms/detail')
+      },
+      {
+        path: 'search',
+        name: '搜索',
+        component: () => import('@/views/project/cms/search')
+      },
+      {
+        path: 'searchpt',
+        name: '搜索',
+        component: () => import('@/views/project/cms/searchpt')
+      }
+    ],
+    hidden: true
+  },
+
+  {
     path: '/form',
     component: Layout,
     children: [
