@@ -38,6 +38,12 @@ module.exports = {
       errors: true
     },
     proxy: {
+      '/cms': {
+        target: 'http://192.168.1.3:30003',
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: { '^/cms': '/cms' }
+      },
       // change xxx-api/login => mock/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {

@@ -76,6 +76,7 @@
 </template>
 <script>
 import comrender from '@/views/components/render'
+import { getCategorys } from '@/api/cms';
 
 export default {
     components: {
@@ -100,6 +101,11 @@ export default {
             ft: `<main-footer></main-footer>`,
             ms: `<main-statics></main-statics>`
         }
+    },
+    mounted(){
+        getCategorys({}).then(res => {
+            console.log(res);
+        });
     }
 }
 </script>
