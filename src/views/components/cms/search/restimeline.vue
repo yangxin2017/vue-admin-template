@@ -102,6 +102,11 @@ export default {
             data: [
             ]
         }
+    },
+    methods: {
+      initContent(params){
+        
+      }
     }
 }
 </script>
