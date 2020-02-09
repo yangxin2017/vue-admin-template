@@ -1,11 +1,13 @@
 <template>
     <div class="cms-bg">
         <comrender :html="head" />
-        <div class="cms-d-content">
+        <div class="cms-d-content" v-if="content">
             <div class="cms-d-left">
-                <comrender :html="left" />
+                <!-- <comrender :html="left" /> -->
+                <detail-left @changeContent="changeContent($event)" :cid="content.cid" :contentId="content.id"></detail-left>
             </div>
             <div class="cms-d-right">
+                <detail-right :obj="content"></detail-right>
             </div>
         </div>
     </div>
@@ -13,16 +15,58 @@
 <script>
 
 import comrender from '@/views/components/render'
+import { getContent, getCategorys, getTags } from '@/api/cms'
+var detailleft = () => import('@/views/components/cms/detail/detailleft')
+var detailright = () => import('@/views/components/cms/detail/detailright')
 
 export default {
     components: {
-        comrender: comrender
+        comrender: comrender,
+        'detail-left': detailleft,
+        'detail-right': detailright
     },
     data(){
         return {
+            contentId: -1,
             head: `<detail-head></detail-head>`,
-            left: `<detail-left></detail-left>`
+            content: false
         }
+    },
+    methods: {
+        changeContent(id){
+            this.contentId = id
+            this.initContent()
+        },
+        initContent(){
+            getContent({id: this.contentId}).then(res => {
+                let caid = res.data.categoryId
+
+                let c = res.data
+                let tmp = {
+                    id: c.id, title: c.title,
+                    cid: c.categoryId,
+                    time: this.$moment(c.publishDate).format("YYYY-DD-MM"),
+                    clicks: c.clicks,
+                    source: c.lydwmc,
+                    desc: c.description,
+                    pic: c.tpwj ? '/cms/webfile/' + c.tpwj : false,
+                    video: c.spwj ? '/cms/webfile/' + c.spwj : false,
+                    tags: []
+                }
+
+                let tagid = c.tagIds.split(' ').join(',')
+                getTags({ids: tagid}).then(restags => {
+                    tmp.tags = restags.data ? restags.data : []
+
+                    this.content = tmp
+                })
+                
+            })
+        }
+    },
+    mounted(){
+        this.contentId = this.$route.query.id;
+        this.initContent()
     }
 }
 </script>
@@ -39,6 +83,9 @@ export default {
     
     .cms-d-left{
         border:solid 1px #B9D717;
+    }
+    .cms-d-right{
+        flex: 1
     }
 }
 </style>

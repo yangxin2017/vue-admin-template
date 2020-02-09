@@ -2,42 +2,29 @@
     <div class="links">
         <b>搜索热点</b>
         <ul class="tls">
-            <li>
-                <span class="num">1</span>
-                <span class="title">热词热词热词热词</span>
-                <span class="clks">1234</span>
-            </li>
-            <li>
-                <span class="num">2</span>
-                <span class="title">热词热词热词热词</span>
-                <span class="clks">1234</span>
-            </li>
-            <li>
-                <span class="num">3</span>
-                <span class="title">热词热词热词热词</span>
-                <span class="clks">1234</span>
-            </li>
-            <li>
-                <span class="num">4</span>
-                <span class="title">热词热词热词热词</span>
-                <span class="clks">1234</span>
-            </li>
-            <li>
-                <span class="num">5</span>
-                <span class="title">热词热词热词热词</span>
-                <span class="clks">1234</span>
-            </li>
-            <li>
-                <span class="num">6</span>
-                <span class="title">热词热词热词热词</span>
-                <span class="clks">1234</span>
+            <li v-for="(item,index) in hots" :key="item.id">
+                <span class="num">{{index+1}}</span>
+                <span class="title">{{item.name}}</span>
+                <span class="clks">{{item.searchCount}}</span>
             </li>
         </ul>
     </div>
 </template>
 <script>
+
+import { getWords } from '@/api/cms'
+
 export default {
-    
+    data(){
+        return {
+            hots: []
+        }
+    },
+    mounted(){
+        getWords({pagesize: 10}).then(res => {
+            this.hots = res.data
+        })
+    }
 }
 </script>
 <style lang="scss" scoped>

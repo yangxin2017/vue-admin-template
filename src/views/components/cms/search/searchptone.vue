@@ -1,32 +1,21 @@
 <template>
     <div class="cms-search-container">
         <div class="menus">
-            <a class="menu-cate sel">全部<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
+            <a @click="curCid=item.id" v-for="item in cates" :key="item.id" :class="{sel: item.id == curCid}" class="menu-cate">
+                {{item.name}}<span class="icon-bot"></span>
+            </a>
         </div>
         <div class="search-con">
             <div class="inpsearch">
-                <input class="inp" type="text" placeholder="请输入搜索内容" />
-                <div class="btn">
+                <input class="inp" type="text" v-model="keyword" placeholder="请输入搜索内容" />
+                <div class="btn" @click="searchContent">
                     <span class="icon-search"></span>
                 </div>
             </div>
             <a class="btn-change">普通模式</a>
         </div>
         <div class="hots">
-            <a class="word"><span class="dot"></span>热刺热刺热刺</a>
-            <a class="word"><span class="dot"></span>热刺热刺热刺</a>
-            <a class="word"><span class="dot"></span>热刺热刺热刺</a>
-            <a class="word"><span class="dot"></span>热刺热刺热刺</a>
-            <a class="word"><span class="dot"></span>热刺热刺热刺</a>
-            <a class="word"><span class="dot"></span>热刺热刺热刺</a>
+            <a class="word" @click="searchHots(item.name)" v-for="item in hots" :key="item.id"><span class="dot"></span>{{item.name}}</a>
         </div>
         <div class="conditions">
             <div class="cons">
@@ -34,13 +23,13 @@
                     <span class="txt">时间</span>
                     <div class="inp-times">
                         <el-date-picker popper-class="inp" style="margin:0 0 0 15px;"
-                            v-model="stime"
+                            v-model="stime" value-format="yyyy-MM-dd HH:mm:ss"
                             type="date"
                             placeholder="选择日期">
                         </el-date-picker>
                         <span class="line"></span>
                         <el-date-picker popper-class="inp"
-                            v-model="etime"
+                            v-model="etime" value-format="yyyy-MM-dd HH:mm:ss"
                             type="date"
                             placeholder="选择日期">
                         </el-date-picker>
@@ -49,16 +38,8 @@
                 <div class="lines-one" style="margin-top:15px;">
                     <span class="txt">单位</span>
                     <ul class="depts">
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
+                        <li @click="curDid=-1" :class="{sel: curDid==-1}">全部</li>
+                        <li @click="curDid=item.id" v-for="item in depts" :key="item.id" :class="{sel: item.id==curDid}">{{item.name}}</li>
                     </ul>
                 </div>
             </div>
@@ -66,12 +47,53 @@
     </div>
 </template>
 <script>
+
+import { getWords, getCategorys, getDepts } from '@/api/cms'
+
 export default {
     data(){
         return {
+            cates: [],
             stime: '',
-            etime: ''
+            etime: '',
+            curCid: -1,
+            curDid: -1,
+            keyword: '',
+            depts: [],
+            pageindex: 1,
+            pagesize: 10,
+            //
+            hots: []
         }
+    },
+    methods: {
+        searchContent(){
+            this.$emit("searchContent", {
+                stime: this.stime ? this.stime : undefined,
+                etime: this.etime ? this.etime : undefined, 
+                word: this.keyword ? this.keyword : undefined, 
+                cid: this.curCid != -1 ? this.curCid : undefined, 
+                lydw: this.curDid != -1 ? this.curDid : undefined,
+                pageindex: this.pageindex,
+                pagesize: this.pagesize
+            })
+        },
+        searchHots(text){
+            this.keyword = text
+            this.searchContent();
+        }
+    },
+    mounted(){
+        getCategorys({}).then(res => {
+            let tmp = [{name: '全部', id: -1}, ...res.data]
+            this.cates = tmp
+        })
+        getWords({pagesize: 10}).then(res => {
+            this.hots = res.data
+        })
+        getDepts({}).then(res => {
+            this.depts = res.data
+        })
     }
 }
 </script>
@@ -94,8 +116,9 @@ export default {
                     list-style:none;padding:0;display:flex;
                     li{
                         font-size:14px;color:#fff;cursor:pointer;margin:0 20px 4px 0;
-                        &:hover{
+                        &:hover, &.sel{
                             text-decoration:underline;
+                            color:#AF8734;font-weight:bold;
                         }
                     }
                 }
@@ -107,7 +130,7 @@ export default {
     .menus{
         display:flex;
         .menu-cate{
-            margin:0 20px 0 0;padding-bottom:5px;width:70px;
+            margin:0 10px 0 0;padding-bottom:5px;width:auto;padding:0 5px;
             font-size:14px;font-weight:bold;color:#fff;text-align:center;
             .icon-bot{
                 background:url('../../../../assets/cms/search/menubot.png') no-repeat center center;

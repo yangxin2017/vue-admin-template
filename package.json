@@ -17,9 +17,11 @@
   "dependencies": {
     "axios": "0.18.1",
     "echarts": "^4.6.0",
+    "echarts-wordcloud": "^1.1.3",
     "element-ui": "2.7.2",
     "hzqing-vue-timeline": "^1.0.3",
     "js-cookie": "2.2.0",
+    "moment": "^2.24.0",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",

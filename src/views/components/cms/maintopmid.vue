@@ -1,13 +1,10 @@
 <template>
 <div class="cms-panel">
     <div class="cms-panel-title">
-        <span class="spe-title-font title">重要动向</span>
+        <span class="spe-title-font title">{{datas.title}}</span>
         <ul class="menus">
-            <li class="sel">
-                <a>四个字的</a>
-            </li>
-            <li>
-                <a>六六六个字的</a>
+            <li :class="{sel: item.id==curCid}" v-for="item in datas.children" :key="item.id">
+                <a @click="changeTab(item)">{{item.title}}</a>
             </li>
         </ul>
         <div class="bot-line">
@@ -17,53 +14,22 @@
         </div>
     </div>   
     <div class="cms-panel-content">
-        <div class="map1">
-            <span class="zhongyin txt sel">中印边境</span>
-            <span class="bohai txt">黄渤海方向</span>
-            <span class="zhongchao txt">中朝边境</span>
-            <span class="donghai txt">东海方向</span>
-            <span class="taihai txt">台海方向</span>
-            <span class="nanhai txt">南海方向</span>
+        <div class="map1" v-if="curType=='hai'">
+            <span @click="changeHAI(item.id.value, item.text)" v-for="item in hais" :key="item.id.value" :class="[item.id.value, 'txt', curHai==item.id.value ? 'sel' : '']">{{item.text}}</span>
         </div>
-        <div class="map2">
-            <span class="meiguo txt sel">美国</span>
-            <span class="lamei txt">拉美</span>
-            <span class="ouzhou txt">欧洲</span>
-            <span class="eluosi txt">俄罗斯</span>
-            <span class="zhongdong txt">中东</span>
-            <span class="feizhou txt">非洲</span>
+        <div class="map2" v-if="curType=='guo'">
+            <span @click="changeGJ(item.id.value, item.text)" v-for="item in guos" :key="item.id.value" :class="[item.id.value, 'txt', curGj==item.id.value ? 'sel' : '']">{{item.text}}</span>
         </div>
         <div class="map-data">
             <div class="map-data-title">
-                <span class="spe-font">美 国</span>
+                <span class="spe-font">{{showtext}}</span>
             </div>
             <ul class="data-lists">
-                <li>
-                    <span class="sjx"></span><a href="#">标题名称标题名称标题题题名称标称称标标题标题...</a>
+                <li v-for="(item,index) in lists" :key="index">
+                    <span class="sjx"></span><a @click="groute(item)">{{item.title}}</a>
                     <div class="data-info">
-                        <span class="time">2019-10-10</span>
-                        <span class="source">XXXXXXXX单位</span>
-                    </div>
-                </li>
-                <li>
-                    <span class="sjx"></span><a href="#">标题名称标题名称标题题题名称标称称标标题标题...</a>
-                    <div class="data-info">
-                        <span class="time">2019-10-10</span>
-                        <span class="source">XXXXXXXX单位</span>
-                    </div>
-                </li>
-                <li>
-                    <span class="sjx"></span><a href="#">标题名称标题名称标题题题名称标称称标标题标题...</a>
-                    <div class="data-info">
-                        <span class="time">2019-10-10</span>
-                        <span class="source">XXXXXXXX单位</span>
-                    </div>
-                </li>
-                <li>
-                    <span class="sjx"></span><a href="#">标题名称标题名称标题题题名称标称称标标题标题...</a>
-                    <div class="data-info">
-                        <span class="time">2019-10-10</span>
-                        <span class="source">XXXXXXXX单位</span>
+                        <span class="time">{{item.time}}</span>
+                        <span class="source">{{item.source}}</span>
                     </div>
                 </li>
             </ul>
@@ -72,8 +38,138 @@
 </div>    
 </template>
 <script>
+import { getContents, getCategorys, getGuoHais } from '@/api/cms'
 export default {
-    
+    props: {
+        cname: {
+            type: String,
+            default: ''
+        },
+        cid: {
+            type: String,
+            default: '-1'
+        }
+    },
+    data(){
+        return {
+            datas: {
+                title: '',
+                children: [
+                ]
+            },
+            curCid: -1,
+            curGj: 'meiguo',
+            curHai: 'bohai',
+            curType: 'guo',
+            showtext: '美国',
+            guos: [],
+            hais: [],
+            lists: []
+        }
+    },
+    methods: {
+        groute(item){
+            this.$router.push({ path: 'detail', query: { id: item.id }});
+        },
+        changeTab(item){
+            this.curCid = item.id
+            this.curType = item.type
+            ////
+            this.curGj = "meiguo"
+            this.curHai = "bohai"
+            let key = item.type == 'guo' ? this.curGj : this.curHai
+            this.showtext = item.datas[key].text
+
+            this.setContent()
+        },
+        changeHAI(hai, text){
+            this.curHai = hai;
+            this.showtext = text;
+
+            this.setContent();
+        },
+        changeGJ(gj, text){
+            this.curGj = gj
+            this.showtext = text;
+
+            this.setContent();
+        },
+        setContent(){
+            let obj = null;
+            for(let c of this.datas.children){
+                if(c.id == this.curCid){
+                    obj = c;
+                    break;
+                }
+            }
+            let dd = null;
+            this.lists = []
+
+            if(this.curType == 'guo'){
+                dd = obj.datas[this.curGj]
+            }else{
+                dd = obj.datas[this.curHai]
+            }
+            if(!dd || dd.lists.length == 0){
+                getContents({cid: this.curCid, gjmc: this.curType=='guo' ? this.curGj : this.curHai, pagesize: 5}).then(res => {
+                    let arr = [];
+                    for(let c of res.data){
+                        let tmp = {
+                            id: c.id, title: c.title,
+                            time: this.$moment(c.publishDate).format("YYYY-DD-MM"),
+                            clicks: c.clicks,
+                            source: c.lydwmc
+                        }
+                        arr.push(tmp)
+                    }
+                    dd.lists = arr
+                    this.lists = arr
+                })
+            }
+        },
+        async getBHS(){
+            let gs = await getGuoHais({});
+            this.guos = gs.data.guo
+            this.hais = gs.data.hai
+            //
+            let relative = this.$store.state.app.cms
+            let zydx = relative.other.zydx
+            //////////////////////////////
+            getCategorys({parentId: this.cid}).then(res => {
+                let chs  = zydx.children
+                //
+                this.curCid = res.data[0].id
+
+                for(let d of res.data){
+                    if(chs['m_' + d.id]){
+                        let type = chs['m_' + d.id].type
+                        let tmp = {
+                            title: d.name, 
+                            id: d.id,
+                            type: type,
+                            datas: {}
+                        }
+                        for(let d of gs.data[type]){
+                            tmp.datas[d.id.value] = { text: d.text, lists: [] }
+                        }
+                        
+                        this.datas.children.push(tmp)
+                    }
+                }
+                ///
+                this.setContent()
+            })
+        }
+    },
+    mounted(){
+        this.datas.title = this.cname
+
+        
+        this.getBHS()
+        // getContents({cid: this.cid}).then(res => {
+        //     console.log(res)
+        // })
+    }
 }
 </script>
 <style lang="scss" scoped>
@@ -81,7 +177,6 @@ export default {
     padding:0 0 0 10px;
 }
 .map1{
-    display:none;
     background:url('../../../assets/cms/content/map1.png') no-repeat 0 0;
     width:409px;height:301px;float:left;margin:10px 0 0 100px;position:relative;
     .txt{
@@ -93,9 +188,9 @@ export default {
     }
     .zhongyin{left:117px;top:65px;}
     .bohai{left:243px;top:47px;}
-    .zhongchao{left:317px;top:43px;}
+    .chaoxian{left:317px;top:43px;}
     .donghai{left:329px;top:100px;}
-    .taihai{left:237px;top:108px;}
+    .huanghai{left:237px;top:108px;}
     .nanhai{left:213px;top:143px;}
 }
 .map2{

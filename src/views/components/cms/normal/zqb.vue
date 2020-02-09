@@ -3,10 +3,8 @@
     <div class="cms-panel-title">
         <span class="spe-title-font title">执勤表</span>
         <span class="zqb-select">
-            <select>
-                <option>网络空间部队1</option>
-                <option>网络空间部队2</option>
-                <option>网络空间部队3</option>
+            <select @change="changeDept($event)">
+                <option v-for="item in data" :key="item.id" :value="item.id">{{item.name}}</option>
             </select>
         </span>
         <div class="bot-line">
@@ -23,28 +21,69 @@
                 <td>姓名</td>
                 <td>电话</td>
             </tr>
-            <tr>
-                <td>席位</td>
-                <td>姓名</td>
-                <td>电话</td>
-            </tr>
-            <tr>
-                <td>席位</td>
-                <td>姓名</td>
-                <td>电话</td>
-            </tr>
-            <tr>
-                <td>席位</td>
-                <td>姓名</td>
-                <td>电话</td>
+            <tr v-for="(item, index) in tables" :key="index">
+                <td>{{item.xw}}</td>
+                <td>{{item.xm}}</td>
+                <td>{{item.dh}}</td>
             </tr>
         </table>
     </div>
 </div>    
 </template>
 <script>
+import { getContents, getDepts } from '@/api/cms'
 export default {
-    
+    props: {
+        cid: {
+            type: String,
+            default: '-1'
+        }
+    },
+    data(){
+        return {
+            data: [],
+            zqbtable: {},
+            tables: []
+        }
+    },
+    methods: {
+        setDeptTable(deptId){
+            if(!this.zqbtable['m_' + deptId]){
+                getContents({cid: this.cid, iszqb: true, lydw: deptId, pagesize: 1}).then(res => {
+                    if(res.data.length > 0){
+                        let d = res.data[0]
+                        let tables = d.sftt != '' ? JSON.parse(d.sftt) : []
+                        let fts = []
+                        if(tables.length > 5){
+                            for(let i=0;i<5;i++){
+                                fts.push(tables[i])
+                            }
+                        }
+                        this.zqbtable['m_' + deptId] = tables
+                    }else{
+                        this.zqbtable['m_' + deptId] = []
+                    }
+                    //////////
+                    this.tables = this.zqbtable['m_' + deptId]
+                })
+            }else{
+                //////////
+                this.tables = this.zqbtable['m_' + deptId]
+            }
+        },
+        changeDept(ix){
+            let deptId = ix.target.value
+
+            this.setDeptTable(deptId)
+        }
+    },
+    mounted(){
+        getDepts({}).then(res => {
+            this.data = res.data
+            this.setDeptTable(res.data[0].id)
+        })
+        // 
+    }
 }
 </script>
 <style lang="scss" scoped>

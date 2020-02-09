@@ -3,37 +3,64 @@
         <comrender :html="head" />
         <div class="cms-s-con">
             <div class="cms-s-left">
-                <comrender :html="search" />
-                <div class="tabs">
+                <search-ptone @searchContent="searchList($event)"></search-ptone>
+                <div class="tabs" v-if="viewtype">
                     <ul>
-                        <li class="sel">网页</li>
-                        <li>事件关联</li>
+                        <li @click="changetype('text')" :class="{sel: viewtype=='text'}">网页</li>
+                        <li @click="changetype('event')" :class="{sel: viewtype=='event'}">事件关联</li>
                     </ul>
                 </div>
-                <comrender :html="statics" />
+                <res-ptone @showtags="settagids($event)" ref="rlists" :class="{'cms-hide': viewtype=='event'}"></res-ptone>
+                <res-timeline ref="rtimelists" :class="{'cms-hide': viewtype=='text'}"></res-timeline>
             </div>
             <div class="cms-s-right">
-                <comrender :html="tag" />
-                <comrender :html="links" />
+                <rg-tags ref="taglists"></rg-tags>
+                <rg-links></rg-links>
             </div>
         </div>
     </div>
 </template>
 <script>
 import comrender from '@/views/components/render'
+var searchptone = () => import('@/views/components/cms/search/searchptone')
+var resptone = () => import('@/views/components/cms/search/resptone')
+var rgtags = () => import('@/views/components/cms/search/rgtags')
+var rglinks = () => import('@/views/components/cms/search/rglinks')
+var restimeline = () => import('@/views/components/cms/search/restimeline')
+var statics = () => import('@/views/components/cms/search/static')
 
 export default {
     components: {
-        comrender: comrender
+        comrender: comrender,
+        'search-ptone': searchptone,
+        'res-ptone': resptone,
+        'rg-tags': rgtags,
+        'rg-links': rglinks,
+        'res-timeline': restimeline,
+        'statics': statics
+    },
+    methods: {
+        searchList(pas){
+            this.params = pas
+            this.$refs.rlists.initContent(pas)
+        },
+        changetype(type){
+            this.viewtype = type
+        },
+        settagids(ids){
+            console.log(this.$refs)
+            this.$refs.taglists.setTags(ids)
+        }
     },
     data(){
         return {
             head: `<detail-head></detail-head>`,
-            search: `<search-ptone></search-ptone>`,
-            res: `<res-ptone></res-ptone>`,
-            tag: `<rg-tags></rg-tags>`,
-            links: `<rg-links></rg-links>`,
-            timeline: `<res-timeline></res-timeline>`,
+            viewtype: 'text',
+            params: {},
+            tagids: '',
+
+            links: ``,
+            timeline: ``,
             statics: `<statics></statics>`
         }
     }

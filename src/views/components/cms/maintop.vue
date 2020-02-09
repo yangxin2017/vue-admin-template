@@ -1,10 +1,10 @@
 <template>
     <div class="cms-top">
         <div class="lbt">
-            <lbt></lbt>
+            <lbt :cid="lbtid"></lbt>
         </div>
         <div class="zqb">
-            <zqb></zqb>
+            <zqb :cid="zqbid"></zqb>
         </div>
     </div>
 </template>
@@ -15,6 +15,16 @@ export default {
     components: {
         'lbt': lbt,
         'zqb': zqb
+    },
+    props: {
+        lbtid: {
+            type: String,
+            default: null
+        },
+        zqbid: {
+            type: String,
+            default: null
+        }
     }
 }
 </script>

@@ -25,13 +25,18 @@
                         <span class="it-3-2"></span>
                     </span>
                 </div>
-                <div v-for="(item,index) in datas.children" :key="index">
-                    <text-one v-if="item.type=='text'&&index==curIndex" :data="item.datas" />
-                    <text-two v-if="item.type=='text2'&&index==curIndex" />
-                    <pic-txt v-if="item.type=='pic'&&index==curIndex" :data="item.datas" />
-                    <videos v-if="item.type=='video'&&index==curIndex" />
-                    <sys v-if="item.type=='sys'&&index==curIndex" />
-                    <rank v-if="item.type=='rank'&&index==curIndex" />
+                <div v-if="spec == null" style="height:100%">
+                    <div v-for="(item,index) in datas.children" :key="index" style="height:100%;" :class="{'cms-hide': index!=curIndex}">
+                        <text-one v-if="item.type=='text'" :count="item.count" :cid="item.id" />
+                        <text-two v-if="item.type=='text2'" :count="item.count" :cid="item.id" />
+                        <pic-txt v-if="item.type=='pic'" :count="item.count" :cid="item.id" />
+                        <videos v-if="item.type=='video'" :count="item.count" :cid="item.id" />
+                        <sys v-if="item.type=='sys'" :count="item.count" :cid="item.id" />
+                        <text-detail v-if="item.type=='detail'" :count="item.count" :cid="item.id" />
+                    </div>
+                </div>
+                <div v-else>
+                    <rank v-if="spec=='rank'" />
                 </div>
                 
             </div>
@@ -45,6 +50,10 @@ var texttwo = () => import('@/views/components/cms/normal/texttwo')
 var videos = () => import('@/views/components/cms/normal/video')
 var sys = () => import('@/views/components/cms/normal/sys')
 var rank = () => import('@/views/components/cms/normal/rank')
+var textdetail = () => import('@/views/components/cms/normal/textdetail')
+
+
+import { getCategorys } from '@/api/cms'
 
 export default {
     components: {
@@ -53,13 +62,23 @@ export default {
         'videos': videos,
         'sys': sys,
         'rank': rank,
-        'text-two': texttwo
+        'text-two': texttwo,
+        'text-detail': textdetail
     },
     props: {
-        type: {
+        cid: {
             type: String,
-            required: true
+            default: "1"
         },
+        cname: {
+            type: String,
+            default: ''
+        },
+        pkey: {
+            type: String,
+            default: null
+        },
+
         dir: {
             type: String,
             default: 'left'
@@ -67,7 +86,41 @@ export default {
         hei: {
             type: String,
             default: '164'
+        },
+        spec: {
+            type: String,
+            default: null
         }
+    },
+    methods: {
+
+    },
+    mounted(){
+        if(this.spec == null) {
+            getCategorys({parentId: this.cid}).then(res => {
+                if(this.pkey){
+                    let chs  = this.$store.state.app.cms[this.pkey].children
+
+                    for(let d of res.data){
+                        if(chs['m_' + d.id]){
+                            d.type = chs['m_' + d.id].type;
+                            d.count = chs['m_' + d.id].count;
+                            let tmp = {
+                                title: d.name, 
+                                type: d.type,
+                                id: d.id,
+                                datas: [],
+                                count: d.count
+                            }
+                            this.datas.children.push(tmp)
+                        }
+                    }
+                }
+                
+            })
+        }
+        
+        this.datas.title = this.cname
     },
     data(){
         return {
@@ -75,24 +128,6 @@ export default {
             datas: {
                 title: '综合研究',
                 children: [
-                    {
-                        title: '四个字的',
-                        type: 'text',
-                        datas: [
-                            {id: 1, title: '标题内容标题标题标题标题标题', pic: '', link: '#', video: '', source: '网络空间部队', time: '2019-10-10', clicks: 10},
-                            {id: 2, title: '标题内容标题标题标题标题标题', pic: '', link: '#', video: '', source: '网络空间部队', time: '2019-10-10', clicks: 10},
-                            {id: 3, title: '标题内容标题标题标题标题标题', pic: '', link: '#', video: '', source: '网络空间部队', time: '2019-10-10', clicks: 10},
-                        ]
-                    },
-                    {
-                        title: '六个的的字的',
-                        type: 'pic',
-                        datas: [
-                            {id: 4, title: '6标题内容标题标题标题标题标题', pic: 'https://images2015.cnblogs.com/blog/1122059/201704/1122059-20170414154111658-75834134.png', link: '#', video: '', source: '网络空间部队', time: '2019-10-10', clicks: 10},
-                            {id: 5, title: '6标题内容标题标题标题标题标题', pic: 'https://images2015.cnblogs.com/blog/1122059/201704/1122059-20170414154111658-75834134.png', link: '#', video: '', source: '网络空间部队', time: '2019-10-10', clicks: 10},
-                            {id: 6, title: '6标题内容标题标题标题标题标题', pic: 'https://images2015.cnblogs.com/blog/1122059/201704/1122059-20170414154111658-75834134.png', link: '#', video: '', source: '网络空间部队', time: '2019-10-10', clicks: 10},
-                        ]
-                    }
                 ]
             }
         }

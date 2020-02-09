@@ -3,27 +3,52 @@
         <comrender :html="head" />
         <div class="cms-s-con">
             <div class="cms-s-left">
-                <comrender :html="search" />
+                <search-one :cates="cates" @searchContent="searchList($event)"></search-one>
             </div>
             <div class="cms-s-right">
-                <comrender :html="res" />
+                <res-one v-for="item in resultList" :key="item.inx" :pas="item.param" :uuid="item.inx" @closepanel="hidethis($event)"></res-one>
             </div>
         </div>
     </div>
 </template>
 <script>
 import comrender from '@/views/components/render'
+import { getSearchs, getCategorys } from '@/api/cms'
+var searchone = () => import('@/views/components/cms/search/searchone')
+var resone = () => import('@/views/components/cms/search/resone')
 
 export default {
     components: {
-        comrender: comrender
+        comrender: comrender,
+        'search-one': searchone,
+        'res-one': resone
     },
     data(){
         return {
             head: `<detail-head></detail-head>`,
-            search: `<search-one></search-one>`,
-            res: `<res-one></res-one>`
+            cates: [],
+            resultList: [],
+            inx: 1
         }
+    },
+    methods: {
+        searchList(params){
+            this.resultList.push({
+                param: params,
+                inx: this.inx++
+            })
+        },
+        hidethis(uuid){
+            this.resultList = this.resultList.filter((v) => {
+                return v.inx != uuid
+            })
+        }
+    },
+    mounted(){
+        getCategorys({}).then(res => {
+            let tmp = [{name: '全部', id: -1}, ...res.data]
+            this.cates = tmp
+        })
     }
 }
 </script>

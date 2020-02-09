@@ -1,16 +1,14 @@
 <template>
     <div class="cms-search-container">
         <div class="menus">
-            <a class="menu-cate sel">全部<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-cate">版块版块<span class="icon-bot"></span></a>
-            <a class="menu-more">更多<span class="icon-more"></span></a>
+            <div class="cates" :class="{showmore: showmore}">
+                <a v-for="item in cates" @click="chooseCid(item)" :key="item.id" :class="{sel: item.id==curCid}" class="menu-cate">{{item.name}}<span class="icon-bot"></span></a>
+            </div>
+            <a class="menu-more" @click="showmore=!showmore">{{showmore ? '收起' : '更多'}}<span class="icon-more"></span></a>
         </div>
         <div class="inpsearch">
-            <input class="inp" type="text" placeholder="请输入搜索内容" />
-            <div class="btn">
+            <input class="inp" v-model="keyword" type="text" placeholder="请输入搜索内容" />
+            <div class="btn" @click="search">
                 <span class="icon-search"></span>
             </div>
         </div>
@@ -20,13 +18,13 @@
                     <span class="txt">时间</span>
                     <div class="inp-times">
                         <el-date-picker popper-class="inp" style="margin:0 0 0 15px;"
-                            v-model="stime"
+                            v-model="stime" value-format="yyyy-MM-dd HH:mm:ss"
                             type="date"
                             placeholder="选择日期">
                         </el-date-picker>
                         <span class="line"></span>
                         <el-date-picker popper-class="inp"
-                            v-model="etime"
+                            v-model="etime" value-format="yyyy-MM-dd HH:mm:ss"
                             type="date"
                             placeholder="选择日期">
                         </el-date-picker>
@@ -35,16 +33,8 @@
                 <div class="lines-one" style="margin-top:15px;">
                     <span class="txt">单位</span>
                     <ul class="depts">
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
-                        <li>单位名称</li>
+                        <li @click="curDid=-1" :class="{sel: curDid==-1}">全部</li>
+                        <li @click="curDid=item.id" :class="{sel: curDid==item.id}" v-for="item in depts" :key="item.id">{{item.name}}</li>
                     </ul>
                 </div>
             </div>
@@ -53,12 +43,53 @@
     </div>
 </template>
 <script>
+
+import { getDepts } from '@/api/cms'
+
 export default {
+    props: {
+        cates: {
+            type: Array,
+            default: []
+        }
+    },
     data(){
         return {
             stime: '',
-            etime: ''
+            etime: '',
+            curCid: -1,
+            curDid: -1,
+            showmore: false,
+            keyword: '',
+            depts: [],
+            pageindex: 1,
+            pagesize: 10
         }
+    },
+    methods: {
+        chooseCid(item){
+            this.curCid = item.id
+        },
+        search(){
+            this.$emit("searchContent", 
+                {
+                    stime: this.stime ? this.stime : undefined,
+                    etime: this.etime ? this.etime : undefined, 
+                    word: this.keyword ? this.keyword : undefined, 
+                    cid: this.curCid != -1 ? this.curCid : undefined, 
+                    lydw: this.curDid != -1 ? this.curDid : undefined,
+                    pageindex: this.pageindex,
+                    pagesize: this.pagesize
+                })
+        },
+        initDept(){
+            getDepts({}).then(res => {
+                this.depts = res.data
+            })
+        }
+    },
+    mounted(){
+        this.initDept()
     }
 }
 </script>
@@ -88,9 +119,10 @@ export default {
                     flex:1;margin:5px 0 0 9px;flex-wrap:wrap;
                     list-style:none;padding:0;display:flex;
                     li{
-                        flex:0 1 20%;font-size:14px;color:#fff;cursor:pointer;margin:0 0 4px 0;
-                        &:hover{
+                        flex:0 1 25%;font-size:14px;color:#fff;cursor:pointer;margin:0 0 8px 0;
+                        &:hover,&.sel{
                             text-decoration:underline;
+                            color:#AF8734;font-weight:bold;
                         }
                     }
                 }
@@ -101,8 +133,17 @@ export default {
 
     .menus{
         display:flex;
+        flex-wrap: wrap;
+
+        .cates{
+            flex: 1;    
+            height:34px;overflow: hidden;
+            &.showmore{
+                height:auto;
+            }
+        }
         .menu-cate{
-            flex:1;margin:0 20px 0 0;padding-bottom:5px;
+            padding:0 10px 5px 10px;margin-right:3%;float:left;height:35px;
             font-size:14px;font-weight:bold;color:#fff;text-align:center;
             .icon-bot{
                 background:url('../../../../assets/cms/search/menubot.png') no-repeat center center;

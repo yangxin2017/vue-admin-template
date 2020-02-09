@@ -11,16 +11,7 @@ var mainfooter = () => import('@/views/components/cms/normal/footer')
 var mainstas = () => import('@/views/components/cms/mainstatics')
 //
 var detailhead = () => import('@/views/components/cms/detail/detailhead')
-var detailleft = () => import('@/views/components/cms/detail/detailleft')
 //
-var searchone = () => import('@/views/components/cms/search/searchone')
-var searchptone = () => import('@/views/components/cms/search/searchptone')
-var resone = () => import('@/views/components/cms/search/resone')
-var resptone = () => import('@/views/components/cms/search/resptone')
-var rgtags = () => import('@/views/components/cms/search/rgtags')
-var rglinks = () => import('@/views/components/cms/search/rglinks')
-var restimeline = () => import('@/views/components/cms/search/restimeline')
-var statics = () => import('@/views/components/cms/search/static')
 
 export default {
   props: {
@@ -31,6 +22,9 @@ export default {
   },
 
   render(h) {
+    if(!this.html){
+      return false
+    }
     const com = Vue.extend({
       components: {
         'main-header': mainheader,
@@ -43,16 +37,7 @@ export default {
         'main-statics': mainstas,
         //
         'detail-head': detailhead,
-        'detail-left': detailleft,
         //
-        'search-one': searchone,
-        'search-ptone': searchptone,
-        'res-one': resone,
-        'res-ptone': resptone,
-        'rg-tags': rgtags,
-        'rg-links': rglinks,
-        'res-timeline': restimeline,
-        'statics': statics
       },
       template: this.html
     })

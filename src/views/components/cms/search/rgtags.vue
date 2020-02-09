@@ -1,31 +1,33 @@
 <template>
     <div class="tags">
-        <b>标签</b>
+        <b>相关标签</b>
         <ul class="tls">
-            <li>标签标签标签</li>
-            <li>标签标签标签</li>
-            <li>标签标签</li>
-            <li>标签标标签</li>
-            <li>签标签</li>
-            <li>标签标签标签</li>
-            <li>标签标签标签</li>
-            <li>标签标签标签</li>
-            <li>标签标签</li>
-            <li>标签标标签</li>
-            <li>签标签</li>
-            <li>标签标签标签</li>
-            <li>标签标签标签</li>
-            <li>标签标签标签</li>
-            <li>标签标签</li>
-            <li>标签标标签</li>
-            <li>签标签</li>
-            <li>标签标签标签</li>
+            <li v-for="item in datas" :key="item.id">{{item.name}}</li>
         </ul>
     </div>
 </template>
 <script>
+
+import { getTags } from '@/api/cms'
+
 export default {
-    
+    data(){
+        return {
+            datas: []
+        }
+    },
+    methods: {
+        setTags(ids){
+            if(ids){
+                getTags({ids: ids}).then(res => {
+                    this.datas = res.data
+                })
+            }
+        }
+    },
+    mounted(){
+        
+    }
 }
 </script>
 <style lang="scss" scoped>

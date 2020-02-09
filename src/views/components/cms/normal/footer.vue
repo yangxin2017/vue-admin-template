@@ -1,48 +1,44 @@
 <template>
     <div class="cms-footer">
-        <div class="ic i1">
-            <span>逯军</span>
+        <div :class="item.cls" v-for="(item, index) in data" :key="index">
+            <span>{{item.name}}</span>
         </div>
-        <div class="ic i2">
-            <span>逯军</span>
+        <div class="ic ixx" @click="showStatics">
         </div>
-        <div class="ic i3">
-            <span>逯军</span>
-        </div>
-        <div class="ic i4">
-            <span>逯军</span>
-        </div>
-        <div class="ic i5">
-            <span>逯军</span>
-        </div>
-        <div class="ic i6">
-            <span>逯军</span>
-        </div>
-        <div class="ic i7">
-            <span>逯军</span>
-        </div>
-        <div class="ic i8">
-            <span>逯军</span>
-        </div>
-        <div class="ic i9">
-            <span>逯军</span>
-        </div>
-        <div class="ic i10">
-            <span>逯军</span>
-        </div>
-        <div class="ic i11">
-            <span>逯军</span>
-        </div>
-        <div class="ic i12">
-            <span>逯军</span>
-        </div>
-        <div class="ic ixx">
-        </div>
+        <main-statics v-if="showstatics" v-on:hide="hideStatics"></main-statics>
     </div>
 </template>
 <script>
+import { getDepts } from '@/api/cms'
+var mainstas = () => import('@/views/components/cms/mainstatics')
+
 export default {
-    
+    components: {
+        'main-statics': mainstas
+    },
+    data(){
+        return {
+            data: [],
+            showstatics: false
+        }
+    },
+    methods: {
+        showStatics(){
+            this.showstatics = true
+        },
+        hideStatics(){
+            this.showstatics = false
+        }
+    },
+    mounted(){
+        getDepts({}).then(res => {
+            let i = 1;
+            for(let d of res.data){
+                d.cls = 'ic i' + (i++)
+            }
+            this.data = res.data
+        })
+    }
 }
 </script>
 <style lang="scss" scoped>

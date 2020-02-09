@@ -6,6 +6,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 // import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 import echarts from 'echarts'
+import moment from 'moment'
 
 import '@/styles/index.scss' // global css
 
@@ -29,6 +30,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 Vue.prototype.$echarts = echarts
+Vue.prototype.$moment = moment;
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })

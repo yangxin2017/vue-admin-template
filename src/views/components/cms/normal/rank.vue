@@ -2,45 +2,45 @@
     <div class="ranks">
         <div class="li">
             <span class="icons i1"></span>
-            <a>
-                <span class="jt"></span>东部战区联参情报局
-            </a>
-            <a>
-                <span class="jt"></span>东部战区联参情报局
-            </a>
-            <a>
-                <span class="jt"></span>东部战区联参情报局
+            <a v-for="(item,index) in hots" :key="index">
+                <span class="jt"></span>{{item[0]}}
             </a>
         </div>
         <div class="li">
             <span class="icons i2"></span>
-            <a>
-                <span class="jt"></span>东部战区联参情报局
-            </a>
-            <a>
-                <span class="jt"></span>东部战区联参情报局
-            </a>
-            <a>
-                <span class="jt"></span>东部战区联参情报局
+            <a v-for="(item,index) in gxs" :key="index">
+                <span class="jt"></span>{{item[0]}}
             </a>
         </div>
         <div class="li">
             <span class="icons i3"></span>
-            <a>
-                <span class="jt"></span>东部战区联参情报局
-            </a>
-            <a>
-                <span class="jt"></span>东部战区联参情报局
-            </a>
-            <a>
-                <span class="jt"></span>东部战区联参情报局
+            <a v-for="(item,index) in words" :key="index">
+                <span class="jt"></span>{{item.name}}
             </a>
         </div>
     </div>    
 </template>
 <script>
+import { getRanks, getWords } from '@/api/cms'
 export default {
-    
+    data(){
+        return {
+            hots: [],
+            gxs: [],
+            words: []
+        }
+    },
+    mounted(){
+        getRanks({hot: false}).then(res => {
+            this.gxs = res.data
+        })
+        getRanks({hot: true}).then(res => {
+            this.hots = res.data
+        })
+        getWords({pagesize: 3}).then(res => {
+            this.words = res.data
+        })
+    }
 }
 </script>
 <style lang="scss" scoped>

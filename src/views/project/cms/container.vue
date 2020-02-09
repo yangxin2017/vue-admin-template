@@ -12,6 +12,9 @@ export default {
 }
 </script>
 <style lang="scss">
+.cms-hide{
+  display:none;
+}
 @font-face
 {
   font-family: zz;

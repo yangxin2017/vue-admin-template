@@ -1,24 +1,20 @@
 <template>
     <div class="lists">
         <div class="lis">
-            <label class="res-tl">以下是<b>“中国”</b>的搜索结果</label>
-            <span class="icon-close"></span>
+            <label class="res-tl">以下是<b>“{{params.word}}”</b>的搜索结果</label>
+            <span class="icon-close" @click="closecur"></span>
             <ul class="news-lists">
-                <li class="li">
-                    <txtli />
-                </li>
-                <li class="li">
-                    <txtli />
-                </li>
-                <li class="li">
-                    <txtli />
+                <li v-for="item in datas" :key="item.id" class="li">
+                    <txtli :dat="item" />
                 </li>
             </ul>
             <div class="cms-d-pages">
                 <el-pagination
                     background small
+                    @current-change="pagechange"
                     layout="prev, pager, next"
-                    :total="100">
+                    :page-size="params.pagesize"
+                    :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -26,9 +22,58 @@
 </template>
 <script>
 var txtli = () => import('@/views/components/cms/search/txtli')
+
+import { getSearchs } from '@/api/cms'
+
 export default {
     components: {
         'txtli': txtli
+    },
+    props: {
+        pas: {
+            type: Object,
+            default: {}
+        },
+        uuid: {
+            type: Number,
+            default: -1
+        }
+    },
+    data(){
+        return {
+            params: {},
+            total: 0,
+            datas: []
+        }
+    },
+    methods: {
+        search(){
+            getSearchs(this.params).then(res => {
+                let arr = []
+                for(let c of res.data){
+                    let tmp = {
+                        id: c.id, title: c.title,
+                        time: this.$moment(c.publishDate).format("YYYY-DD-MM"),
+                        clicks: c.clicks,
+                        source: c.lydwmc
+                    }
+                    arr.push(tmp)
+                }
+                this.datas = arr
+                this.total = res.total
+            })
+        },
+        pagechange(cpage){
+            this.params.pageindex = cpage
+            this.search()
+        },
+        closecur(){
+            this.$emit("closepanel", this.uuid)
+        }
+    },
+    mounted(){
+        this.params = this.pas
+        this.search()
     }
 }
 </script>
@@ -41,9 +86,9 @@ export default {
         }
     }
     height:calc(100% - 20px);margin-top:20px;
-    .lis{
-        float:left;
-        width:323px;height:calc(100% - 20px);padding:15px 10px;
+    display:inline-block;
+    width:323px;margin-right:30px;overflow:auto;
+    .lis{height:calc(100% - 20px);padding:15px 10px;
         background:#fff;position:relative;
         .icon-close{
             background:url('../../../../assets/cms/search/icons_search.png') no-repeat -64px -36px;

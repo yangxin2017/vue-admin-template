@@ -2,93 +2,171 @@
 <div class="cms-left-con">
     <div class="cms-d-title">
         <span class="cms-select">
-            <select>
-                <option>网络空间部队1</option>
-                <option>网络空间部队2</option>
-                <option>网络空间部队3</option>
+            <select v-model="fcaid" @change="changesel">
+                <option v-for="item in cates" :value="item.id" :key="item.id">{{item.name}}</option>
             </select>
         </span>
     </div>
     <div class="cms-d-menu">
         <ul class="menus">
-            <li class="sel">全部</li>
-            <li>六个字啊啊啊</li>
-            <li>六个字啊</li>
-            <li>六个字啊</li>
+            <li v-for="item in childrens" @click="changeli(item)" :key="item.id" :class="{sel: item.id==caid}">{{item.name}}</li>
         </ul>
     </div>
     <div class="cms-d-search">
         <div class="inp-container">
             <span class="lf"></span>
-            <input type="text" />
+            <input type="text" v-model="keyword" />
             <span class="rg"></span>
         </div>
         <div class="inp-times">
             <el-date-picker popper-class="inp" style="margin:0 0 0 15px;"
-                v-model="stime"
+                v-model="stime" value-format="yyyy-MM-dd HH:mm:ss"
                 type="date"
                 placeholder="选择日期">
             </el-date-picker>
             <span class="line"></span>
             <el-date-picker popper-class="inp"
-                v-model="etime"
+                v-model="etime" value-format="yyyy-MM-dd HH:mm:ss"
                 type="date"
                 placeholder="选择日期">
             </el-date-picker>
-            <input type="button" value="确定" class="btnsearch" />
+            <input @click="search" type="button" value="确定" class="btnsearch" />
         </div>
     </div>
-    <div class="cms-d-lists">
-        <div class="cms-d-mod">
+    <div class="cms-d-lists" v-if="contents.length>0">
+        <div class="cms-d-mod" v-for="item in contents" :key="item.id">
             <div class="line-title">
                 <span class="sjx"></span>
-                <a href="#" class="tl">标题名称标题名称标题名称标题名称标...</a>
-                <span class="clks">浏览量：56</span>
+                <a @click="groute(item)" class="tl" :class="{sel: item.id==contentId}">{{item.title}}</a>
+                <span class="clks">浏览量：{{item.clicks}}</span>
             </div>
             <div class="line-info">
-                <span class="time">2019-10-01 12:30</span>
-                <span class="source">XXXXXXXX单位</span>
+                <span class="time">{{item.time}}</span>
+                <span class="source">{{item.source}}</span>
             </div>
         </div>
-        <div class="cms-d-mod">
-            <div class="line-title">
-                <span class="sjx"></span>
-                <a href="#" class="tl">标题名称标题名称标题名称标题名称标...</a>
-                <span class="clks">浏览量：56</span>
-            </div>
-            <div class="line-info">
-                <span class="time">2019-10-01 12:30</span>
-                <span class="source">XXXXXXXX单位</span>
-            </div>
-        </div>
-        <div class="cms-d-mod">
-            <div class="line-title">
-                <span class="sjx"></span>
-                <a href="#" class="tl">标题名称标题名称标题名称标题名称标...</a>
-                <span class="clks">浏览量：56</span>
-            </div>
-            <div class="line-info">
-                <span class="time">2019-10-01 12:30</span>
-                <span class="source">XXXXXXXX单位</span>
-            </div>
-        </div>
+    </div>
+    <div class="cms-d-lists" style="color:#fff;" v-if="contents.length<=0">
+        没有查询到数据。
     </div>
     <div class="cms-d-pages">
         <el-pagination
             background
+            @current-change="pagechange"
             layout="prev, pager, next"
-            :total="1000">
+            :page-size="pagesize"
+            :total="total">
         </el-pagination>
     </div>
 </div>    
 </template>
 <script>
+import { getAllCategorys, getSearchs, getContents } from '@/api/cms'
+
 export default {
+    props: {
+        cid: {
+            type: Number,
+            default: -1
+        },
+        contentId: {
+            type: Number,
+            default: -1
+        }
+    },
     data(){
         return {
             stime: '',
-            etime: ''
+            etime: '',
+            cates: [],
+            childrens: [],
+            fcaid: -1,
+            caid: -1,
+            keyword: '',
+            contents: [],
+            total: 10,
+            pagesize: 13,
+            pageindex: 1
         };
+    },
+    methods: {
+        groute(item){
+            this.$emit('changeContent', item.id)
+        },
+        search(){
+            this.setcontentlist()
+        },
+        setchildren(){
+            let arr = [];
+            for(let c of this.cates){
+                if(c.id == this.fcaid){
+                    arr = c.children
+                    break
+                }
+            }
+            this.childrens = [{id: -1, name: '全部'}, ...arr];
+        },
+        changesel(){
+            this.setchildren()
+            this.caid = -1
+            this.pageindex = 1
+            this.setcontentlist()
+        },
+        changeli(item){
+            this.caid = item.id
+            this.pageindex = 1
+            this.setcontentlist()
+        },
+        pagechange(cpage){
+            this.pageindex = cpage
+            this.setcontentlist()
+        },
+        setcontentlist(){
+            let cid = this.fcaid
+            if(this.caid != -1){
+                cid = this.caid
+            }
+
+            let st = this.stime ? this.stime : undefined
+            let et = this.etime ? this.etime : undefined
+
+            getContents({cid: cid, stime: st, etime: et, title: this.keyword, containChild: true, pageindex: this.pageindex, pagesize: this.pagesize}).then(res => {
+                this.total = res.total
+                let arr = []
+                for(let c of res.data){
+                    let tmp = {
+                        id: c.id, title: c.title,
+                        time: this.$moment(c.publishDate).format("YYYY-DD-MM"),
+                        clicks: c.clicks,
+                        source: c.lydwmc
+                    }
+                    arr.push(tmp)
+                }
+                this.contents = arr
+            })
+        },
+        setFcaidByCid(){
+            for(let f of this.cates){
+                for(let c of f.children){
+                    if(c.id == this.caid){
+                        this.fcaid = f.id;
+                        break
+                    }
+                }
+            }
+        }
+    },
+    mounted(){
+        this.caid = this.cid
+        getAllCategorys({}).then(res => {
+            this.cates = res.data
+            // this.fcaid = res.data[0].id
+            ///////
+            this.setFcaidByCid();
+            this.setchildren()
+            ///////
+            this.setcontentlist()
+        })
     }
 }
 </script>
@@ -98,7 +176,7 @@ export default {
 }
 .cms-d-lists{
     padding:0 25px;margin:20px 0 0 0;
-    height:calc(100% - 199px);
+    height:calc(100% - 216px);
     .cms-d-mod{
         margin:0 0 20px 0;
         .line-title{
@@ -110,6 +188,9 @@ export default {
             .tl{
                 color:#fff;font-size:14px;margin:0 0 0 10px;flex:1;
                 &:hover{text-decoration:underline;}
+                &.sel{
+                    color:#8EA413;font-weight: bold;
+                }
             }
             .clks{
                 width:100px;color:#fff;font-size:12px;text-align:right;

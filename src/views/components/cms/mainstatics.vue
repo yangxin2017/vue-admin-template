@@ -3,16 +3,16 @@
         <div class="an-layer">
             <div class="anlayer-title">
                 <span>标题名称</span>
-                <img src="../../../assets/cms/content/statics/anlayer_close.png" class="close-dialog">
+                <img src="../../../assets/cms/content/statics/anlayer_close.png" @click="$emit('hide')" class="close-dialog">
             </div>
             <div class="anlayer-num">
                 <div class="anlayer-allnum">
                     <div class="allnum-title">总数据量</div>
-                    <div class="allnum-nums">100</div>
+                    <div class="allnum-nums">{{total}}</div>
                 </div>
                 <div class="anlayer-todaynum">
                     <div class="todaynum-title">今日更新</div>
-                    <div class="todaynum-nums">90</div>
+                    <div class="todaynum-nums">{{today}}</div>
                 </div>
             </div>
             <div class="anlayer-date">
@@ -20,7 +20,7 @@
                     <span class="span-select-nor" style="top:-17px;">
                         <img src="../../../assets/cms/content/statics/analysis_down.png" alt="" style="top:9px;">
                         <span class="ss-txt" style="left:25px;color:#E1FF0F;"></span>
-                        <select class="sel_change sel-years">
+                        <select v-model="year" @change="changeyear" class="sel_change sel-years">
                             <option value="2019">2019年</option>
                             <option value="2020">2020年</option>
                             <option value="2021">2021年</option>
@@ -36,18 +36,7 @@
                         <div class="line"></div>
                         <div class="linetimebox">
                             <div class="date">
-                                <span class="tldate select_line" data-val="1">1月</span>
-                                <span class="tldate select_line" data-val="2">2月</span>
-                                <span class="tldate select_line" data-val="3">3月</span>
-                                <span class="tldate select_line" data-val="4">4月</span>
-                                <span class="tldate select_line" data-val="5">5月</span>
-                                <span class="tldate select_line" data-val="6">6月</span>
-                                <span class="tldate select_line" data-val="7">7月</span>
-                                <span class="tldate select_line" data-val="8">8月</span>
-                                <span class="tldate select_line" data-val="9">9月</span>
-                                <span class="tldate select_line" data-val="10">10月</span>
-                                <span class="tldate select_line" data-val="11">11月</span>
-                                <span class="tldate select_line" data-val="12">12月</span>
+                                <span @click="changemonth(item)" v-for="item in [1,2,3,4,5,6,7,8,9,10,11,12]" :key="item" class="tldate" :class="{'select_line': (item >= smonth && item <= emonth)}" :data-val="item">{{item}}月</span>
                             </div>
                         </div>
                     </div>
@@ -59,16 +48,14 @@
                     <div class="layer-leftT">
                         <div class="anylayer-title">
                             <span class="left-titname">
-                                标题名称
+                                数量统计
                             </span>
                             <div class="anylayer-select">
                                 <span class="span-select-nor" style="top:-17px;">
                                     <img src="../../../assets/cms/content/statics/select_down.png" alt="">
                                     <span class="ss-txt" style="font-size:13px;"></span>
-                                    <select class="sel_change select-dept sd1" style="font-size:13px;">
-                                        <option value="">单位123</option>
-                                        <option value="">单位123</option>
-                                        <option value="">单位123</option>
+                                    <select v-model="dept1" @change="changetotal" class="sel_change select-dept sd1" style="font-size:13px;">
+                                        <option v-for="item in depts" :value="item.id" :key="item.id">{{ item.name }}</option>
                                     </select>
                                 </span>
                             </div>
@@ -80,16 +67,14 @@
                     <div class="layer-leftB">
                         <div class="anylayer-title">
                             <span class="left-titname">
-                                标题名称
+                                更新量统计
                             </span>
                             <div class="anylayer-select">
                                 <span class="span-select-nor" style="top:-17px;">
                                     <img src="../../../assets/cms/content/statics/select_down.png" alt="">
                                     <span class="ss-txt" style="font-size:13px;"></span>
-                                    <select class="sel_change select-dept sd2" style="font-size:13px;">
-                                        <option value="">单位123</option>
-                                        <option value="">单位123</option>
-                                        <option value="">单位123</option>
+                                    <select v-model="dept2" @change="changeupdate" class="sel_change select-dept sd2" style="font-size:13px;">
+                                        <option v-for="item in depts" :value="item.id" :key="item.id">{{ item.name }}</option>
                                     </select>
                                 </span>
 
@@ -103,7 +88,7 @@
                 <div class="layer-center">
                     <div class="anylayer-title">
                         <span class="left-titname">
-                            标题名称
+                            搜索词
                         </span>
                     </div>
                     <div class="echartC layer-echart3">
@@ -114,7 +99,7 @@
                     <div class="layer-rightT">
                         <div class="anylayer-title">
                             <span class="left-titname">
-                                标题名称
+                                贡献排名
                             </span>
                         </div>
                         <div class="echartR layer-echart4">
@@ -124,7 +109,7 @@
                     <div class="layer-rightB">
                         <div class="anylayer-title">
                             <span class="left-titname">
-                                标题名称
+                                热力排名
                             </span>
                         </div>
                         <div class="echartR layer-echart5">
@@ -137,8 +122,164 @@
     </div>
 </template>
 <script>
+
+import { getCountStatics, getCateStatics, getWords, getRanks, getDepts } from '@/api/cms'
+import 'echarts-wordcloud'
+
 export default {
+    data(){
+        return {
+            total: 0,
+            today: 0,
+            depts: [],
+            year: 2020,
+            smonth: 1,
+            emonth: 12,
+            //////////
+            dept1: null,
+            dept2: null,
+            l1: null,
+            l2: null,
+            m1: null,
+            r1: null,
+            r2: null
+        }
+    },
+    mounted(){
+        this.l1 = this.$echarts.init(document.getElementById('layer-echart1'));
+        this.l2 = this.$echarts.init(document.getElementById('layer-echart2'));
+        this.m1 = this.$echarts.init(document.getElementById('layer-echart3'));
+        this.r1 = this.$echarts.init(document.getElementById('layer-echart4'));
+        this.r2 = this.$echarts.init(document.getElementById('layer-echart5'));
+
+        getCountStatics({}).then(res => {
+            this.total = res.data.total
+            this.today = res.data.today
+        })
+        getDepts({}).then(res => {
+            this.depts = res.data
+            this.dept1 = this.depts[0].id
+            this.dept2 = this.depts[0].id
+            /////获取统计信息
+            let stime = this.getStime()
+            let etime = this.getEtime()
+
+            this.m_m1();
+            this.m_r1();
+            this.m_r2();
+            this.m_l1();
+            this.m_l2();
+            
+        })
+    },
     methods: {
+        changetotal(){
+            this.m_l1()
+        },
+        changeupdate(){
+            this.m_l2()
+        },
+        changeyear(){
+            this.m_m1();
+            this.m_r1();
+            this.m_r2();
+            this.m_l1();
+            this.m_l2();
+        },
+        changemonth(m){
+            // this.emonth = m
+        },
+        //////
+        getStime(){ return [this.year, this.smonth, 1].join('-') + ' 00:00:00' },
+        getEtime(){ 
+            var days = new Date(this.year, this.emonth, 0).getDate()
+            return [this.year, this.emonth, days].join('-') + ' 00:00:00' 
+        },
+        m_l1(){
+            let stime = this.getStime()
+            let etime = this.getEtime()
+            //左1
+            this.l1.showLoading({text: '数据加载中...'});
+            getCateStatics({deptId: this.dept1, etime: etime}).then(res => {
+                this.l1.hideLoading();
+                let data = res.data;
+                if(data && data.length > 0){
+                    let option = this.Chart1Option(data);
+                    this.l1.setOption(option, true);
+                }else{
+                    let op = this.NodataOption();
+                    this.l1.setOption(op, true);
+                }
+            }, "json");
+        },
+        m_l2(){
+            let stime = this.getStime()
+            let etime = this.getEtime()
+            //左2
+            this.l2.showLoading({text: '数据加载中...'});
+            getCateStatics({deptId: this.dept2, stime: stime, etime: etime}).then(res => {
+                this.l2.hideLoading();
+                let data = res.data;
+                if(data && data.length > 0){
+                    let option = this.Chart1Option(data);
+                    this.l2.setOption(option, true);
+                }else{
+                    let op = this.NodataOption();
+                    this.l2.setOption(op, true);
+                }
+            }, "json");
+        },
+        m_m1(){
+            let stime = this.getStime()
+            let etime = this.getEtime()
+            // 中间
+            this.m1.showLoading({text: '数据加载中...'});
+            getWords({stime: stime, etime: etime, pagesize: 100}).then(res => {
+                this.m1.hideLoading();
+                let data = res.data
+                if(data && data.length > 0){
+                    let option = this.Chart3Option(data);
+                    this.m1.setOption(option, true);
+                }else{
+                    let op = this.NodataOption();
+                    this.m1.setOption(op, true);
+                }
+            })
+        },
+        m_r1(){
+            let stime = this.getStime()
+            let etime = this.getEtime()
+            // 右1
+            this.r1.showLoading({text: '数据加载中...'})
+            getRanks({hot: false, stime: stime, etime: etime}).then(res => {
+                let data = res.data
+                this.r1.hideLoading();
+                if(data && data.length > 0){
+                    let option = this.Chart4Option(data);
+                    this.r1.setOption(option, true);
+                }else{
+                    let op = this.NodataOption();
+                    this.r1.setOption(op, true);
+                }
+            })
+        },
+        m_r2(){
+            let stime = this.getStime()
+            let etime = this.getEtime()
+            // 右2
+            this.r2.showLoading({text: '数据加载中...'})
+            getRanks({hot: true, stime: stime, etime: etime}).then(res => {
+                let data = res.data
+                this.r2.hideLoading();
+                if(data && data.length > 0){
+                    let option = this.Chart4Option(data);
+                    this.r2.setOption(option, true);
+                }else{
+                    let op = this.NodataOption();
+                    this.r2.setOption(op, true);
+                }
+            })
+        },
         // charts left
         Chart1Option(lists){
             var leftDatas = {
@@ -146,8 +287,8 @@ export default {
                 ydata: [],
             }
             for(let ld of lists){
-                leftDatas.xdata.push(ld[2]);
-                leftDatas.ydata.push(ld[0]);
+                leftDatas.xdata.push(ld.name);
+                leftDatas.ydata.push(ld.count);
             }
             var option = {
                 grid: {
@@ -527,7 +668,7 @@ export default {
   width: 40px;
   height: 26px;
   border-bottom: 3px solid #fff;
-  margin: 17px 22px 0 22px;
+  margin: 20px 22px 0 22px;
   text-align: center;
   cursor: pointer;
 }
@@ -642,15 +783,15 @@ export default {
 }
 .span-select-nor .sel_change{
   position:absolute;width:171px;height:30px;
-  background:transparent;
+  appearance:none;
   color:#fff;
   font-weight:bold;
   font-size:16px;
-  left: 6px;
+  left: 11px;
   top: 2px;
   border: none;
-  opacity: 0;
   width:100%;
+  outline:none;
   margin:0 !important;padding:0 !important;
 }
 .span-select-nor .ss-txt{

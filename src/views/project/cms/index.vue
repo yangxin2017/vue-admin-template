@@ -3,7 +3,7 @@
         <comrender :html="head" />
         <div class="cms-contents">
             <div class="cms-con-left">
-                <div class="cms-com">
+                <div class="cms-com" v-if="l1">
                     <comrender :html="l1" />
                 </div>
                 <div class="cms-com">
@@ -70,13 +70,11 @@
         <div class="footer">
             <comrender :html="ft" />
         </div>
-
-        <comrender :html="ms" />
     </div>
 </template>
 <script>
 import comrender from '@/views/components/render'
-import { getCategorys } from '@/api/cms';
+import { getCategorys, login } from '@/api/cms';
 
 export default {
     components: {
@@ -85,27 +83,60 @@ export default {
     data(){
         return {
             head: `<main-header></main-header>`,
-            l1: `<main-panel type="pic"></main-panel>`,
-            l2: `<main-panel type="text"></main-panel>`,
-            l3: `<main-panel type="text"></main-panel>`,
-            l4: `<main-panel type="text"></main-panel>`,
-            t1: `<main-top></main-top>`,
-            t2: `<main-top-mid></main-top-mid>`,
-            r1: `<main-panel type="video" dir="right"></main-panel>`,
-            r2: `<main-panel type="text" dir="right"></main-panel>`,
-            r3: `<main-panel type="sys" dir="right" hei="120"></main-panel>`,
-            r4: `<main-panel type="rank" dir="right" hei="135"></main-panel>`,
+            l1: ``,
+            l2: ``,
+            l3: ``,
+            l4: ``,
+            t1: ``,
+            t2: ``,
+            r1: ``,
+            r2: ``,
+            r3: ``,
+            r4: `<main-panel type="rank" dir="right" hei="135" spec="rank" cname="排行榜"></main-panel>`,
             r5: `<main-contact></main-contact>`,
-            b1: `<main-panel type="text2"></main-panel>`,
-            b2: `<main-panel type="text2"></main-panel>`,
+            b1: ``,
+            b2: ``,
             ft: `<main-footer></main-footer>`,
-            ms: `<main-statics></main-statics>`
+            ms: ``,
+            showTJ: false
+        }
+    },
+    methods: {
+        getCategoryById(datas, id){
+            let cate = null
+            for(let d of datas){
+                if(d.id == id){
+                    cate = d
+                    break
+                }
+            }
+            return cate
+        },
+        showtj(){
+            console.log('112233')
         }
     },
     mounted(){
+        let relative = this.$store.state.app.cms
         getCategorys({}).then(res => {
-            console.log(res);
+            for(let k in relative){
+                if(k != 'other') {
+                    let d = this.getCategoryById(res.data, relative[k].id)
+                    let hstr = relative[k].height ? `hei=${relative[k].height}` : ''
+                    this[k] = `<main-panel dir="${relative[k].dir}" ${hstr} pkey="${k}" cid="${relative[k].id}" cname="${d.name}"></main-panel>`
+                }else{
+                    let d = this.getCategoryById(res.data, relative.other.zydx.id)
+                    console.log(d, res.data)
+                    this.t2 = `<main-top-mid cname="${d.name}" cid="${d.id}"></main-top-mid>`
+                }
+            }
         });
+        let obj = relative['other'];
+        this.t1 = `<main-top lbtid="${obj.lbt.id}" zqbid="${obj.zqb.id}"></main-top>`
+
+
+        /////
+        // login({username: 'f1', password: '123456'});
     }
 }
 </script>

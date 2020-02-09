@@ -1,4 +1,5 @@
 import { login, logout, getInfo } from '@/api/user'
+import { getDepts } from '@/api/cms'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 

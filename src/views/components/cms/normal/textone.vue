@@ -4,7 +4,7 @@
             <div class="cms-text-com">
                 <div class="title">
                     <span class="sjx"></span>
-                    <a :href="item.link">{{item.title}}</a>
+                    <a @click="groute(item)">{{item.title}}</a>
                 </div>
                 <div class="contents">
                     <span class="time">{{item.time}}</span>
@@ -16,15 +16,42 @@
     </div>
 </template>
 <script>
+
+import { getContents } from '@/api/cms'
+
 export default {
     props: {
-        data: {
-            type: Array,
-            default: []
+        cid: {
+            type: Number,
+            default: -1
+        },
+        count: {
+            type: Number,
+            default: 4
+        }
+    },
+    data(){
+        return {
+            data: []
+        }
+    },
+    methods: {
+        groute(item){
+            this.$router.push({ path: 'detail', query: { id: item.id }});
         }
     },
     mounted(){
-
+        getContents({cid: this.cid, pagesize: this.count}).then(res => {
+            for(let c of res.data){
+                let tmp = {
+                    id: c.id, title: c.title,
+                    time: this.$moment(c.publishDate).format("YYYY-DD-MM"),
+                    clicks: c.clicks,
+                    source: c.lydwmc
+                }
+                this.data.push(tmp)
+            }
+        })
     }
 }
 </script>
