@@ -1,8 +1,8 @@
 <template>
     <div class="tags">
-        <b>相关标签</b>
+        <b>相关事件</b>
         <ul class="tls">
-            <li v-for="item in datas" :key="item.id">{{item.name}}</li>
+            <li @click="choosetag(item)" :class="{sel: item.id==curtagid}" v-for="item in datas" :key="item.id">{{item.name}}</li>
         </ul>
     </div>
 </template>
@@ -13,20 +13,40 @@ import { getTags } from '@/api/cms'
 export default {
     data(){
         return {
-            datas: []
+            alldatas: [],
+            datas: [],
+            curtagid: -1
         }
     },
     methods: {
-        setTags(ids){
-            if(ids){
-                getTags({ids: ids}).then(res => {
-                    this.datas = res.data
-                })
+        choosetag(item){
+            this.curtagid = item.id
+            this.$emit('clicktag', item.id)
+        },
+        filterTags(keyword){
+            console.log(keyword, this.alldatas)
+            let inx = 0
+            let arr = []
+            for(let d of this.alldatas){
+                if(d.name.indexOf(keyword) >= 0){
+                    inx++;
+                    if(inx <= 30){
+                        arr.push(d)
+                    }
+                }
             }
+            this.datas = arr
         }
     },
     mounted(){
-        
+        let showcount = 30
+        getTags({}).then(res => {
+            this.alldatas = res.data
+            for(let i=0;i<this.alldatas.length;i++){
+                if(i >= 30){ break; }
+                this.datas.push(this.alldatas[i])
+            }
+        })
     }
 }
 </script>
@@ -40,7 +60,8 @@ export default {
         li{
             flex:0 1 16.66%;font-size:14px;color:#fff;
             text-align:left;cursor:pointer;margin:0 0 20px 0;
-            &:hover{
+            &:hover, &.sel{
+                color:#AF8734;font-weight:bold;
                 text-decoration:underline;
             }
         }

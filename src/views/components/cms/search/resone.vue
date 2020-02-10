@@ -3,12 +3,15 @@
         <div class="lis">
             <label class="res-tl">以下是<b>“{{params.word}}”</b>的搜索结果</label>
             <span class="icon-close" @click="closecur"></span>
-            <ul class="news-lists">
+            <ul class="news-lists" v-if="datas.length > 0">
                 <li v-for="item in datas" :key="item.id" class="li">
                     <txtli :dat="item" />
                 </li>
             </ul>
-            <div class="cms-d-pages">
+            <div class="no-data" v-if="datas.length == 0">
+                没有查询到数据。
+            </div>
+            <div class="cms-d-pages" v-if="datas.length > 0">
                 <el-pagination
                     background small
                     @current-change="pagechange"
@@ -53,7 +56,7 @@ export default {
                 for(let c of res.data){
                     let tmp = {
                         id: c.id, title: c.title,
-                        time: this.$moment(c.publishDate).format("YYYY-DD-MM"),
+                        time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
                         clicks: c.clicks,
                         source: c.lydwmc
                     }
@@ -100,6 +103,10 @@ export default {
             li{margin-bottom:20px;}
         }
     }
+}
+.no-data{
+    font-size:14px;color:#333;font-weight:bold;
+    margin:20px 0 0 0;
 }
 </style>
 

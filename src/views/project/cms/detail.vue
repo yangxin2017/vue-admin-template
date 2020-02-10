@@ -45,7 +45,7 @@ export default {
                 let tmp = {
                     id: c.id, title: c.title,
                     cid: c.categoryId,
-                    time: this.$moment(c.publishDate).format("YYYY-DD-MM"),
+                    time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
                     clicks: c.clicks,
                     source: c.lydwmc,
                     desc: c.description,

@@ -45,7 +45,7 @@ export default {
             for(let c of res.data){
                 let tmp = {
                     id: c.id, title: c.title,
-                    time: this.$moment(c.publishDate).format("YYYY-DD-MM"),
+                    time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
                     clicks: c.clicks,
                     source: c.lydwmc
                 }

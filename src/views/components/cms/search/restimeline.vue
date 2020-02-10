@@ -1,111 +1,55 @@
 <template>
     <div class="cms-timeline">
-        <section id="cd-timeline" class="cd-container">
-            <div class="cd-timeline-block">
+        <section id="cd-timeline" class="cd-container" v-if="datas.length > 0">
+            <div class="cd-timeline-block" v-for="item in datas" :key="item.id">
                 <div class="cd-timeline-img cd-picture">
                     
                 </div>
 
                 <div class="cd-timeline-content">
-                    <p>网页时间轴一般用于展示以时间为主线的事件，如企业网站常见的公司发展历程等。
+                    <p>{{item.title}}
                     </p>
                     <p>
-                        <span class="source">来源来源</span>
-                        <span class="clks">点击次数：1009</span>
+                        <span class="source">{{item.source}}</span>
+                        <span class="clks">点击次数：{{item.clicks}}</span>
                     </p>
                     
-                    <span class="cd-date">2015-01-06</span>
-                </div>
-            </div>
-            <div class="cd-timeline-block">
-                <div class="cd-timeline-img cd-movie">
-                </div>
-
-                <div class="cd-timeline-content">
-                    <p>网页时间轴一般用于展示以时间为主线的事件，如企业网站常见的公司发展历程等。
-                    </p>
-                    <p>
-                        <span class="source">来源来源</span>
-                        <span class="clks">点击次数：1009</span>
-                    </p>
-                    <span class="cd-date">2014-12-25</span>
-                </div>
-            </div>
-            <div class="cd-timeline-block">
-                <div class="cd-timeline-img cd-picture">
-                    
-                </div>
-
-                <div class="cd-timeline-content">
-                    <p>网页时间轴一般用于展示以时间为主线的事件，如企业网站常见的公司发展历程等。
-                    </p>
-                    <p>
-                        <span class="source">来源来源</span>
-                        <span class="clks">点击次数：1009</span>
-                    </p>
-                    
-                    <span class="cd-date">2015-01-06</span>
-                </div>
-            </div>
-            <div class="cd-timeline-block">
-                <div class="cd-timeline-img cd-movie">
-                </div>
-
-                <div class="cd-timeline-content">
-                    <p>网页时间轴一般用于展示以时间为主线的事件，如企业网站常见的公司发展历程等。
-                    </p>
-                    <p>
-                        <span class="source">来源来源</span>
-                        <span class="clks">点击次数：1009</span>
-                    </p>
-                    <span class="cd-date">2014-12-25</span>
-                </div>
-            </div>
-            <div class="cd-timeline-block">
-                <div class="cd-timeline-img cd-picture">
-                    
-                </div>
-
-                <div class="cd-timeline-content">
-                    <p>网页时间轴一般用于展示以时间为主线的事件，如企业网站常见的公司发展历程等。
-                    </p>
-                    <p>
-                        <span class="source">来源来源</span>
-                        <span class="clks">点击次数：1009</span>
-                    </p>
-                    
-                    <span class="cd-date">2015-01-06</span>
-                </div>
-            </div>
-            <div class="cd-timeline-block">
-                <div class="cd-timeline-img cd-movie">
-                </div>
-
-                <div class="cd-timeline-content">
-                    <p>网页时间轴一般用于展示以时间为主线的事件，如企业网站常见的公司发展历程等。
-                    </p>
-                    <p>
-                        <span class="source">来源来源</span>
-                        <span class="clks">点击次数：1009</span>
-                    </p>
-                    <span class="cd-date">2014-12-25</span>
+                    <span class="cd-date">{{item.time}}</span>
                 </div>
             </div>
         </section>
+        <div class="no-data" v-if="datas.length == 0">
+          没有查询到数据。
+        </div>
     </div>
 </template>
 <script>
 
+import { getContents } from '@/api/cms'
+
 export default {
     data(){
         return {
-            data: [
+            datas: [
             ]
         }
     },
     methods: {
-      initContent(params){
-        
+      initContent(tagid){
+        this.datas = []
+        getContents({tagid: tagid}).then(res => {
+          let arr = [];
+          for(let c of res.data){
+                let tmp = {
+                    id: c.id, title: c.title,
+                    time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
+                    clicks: c.clicks,
+                    source: c.lydwmc
+                }
+                arr.push(tmp)
+          }
+          this.datas = arr
+        })
       }
     }
 }
@@ -114,6 +58,10 @@ export default {
 .cms-timeline{
     height:calc(100% - 263px);
     overflow:auto;
+}
+.no-data{
+  color:#fff;
+  margin-top:20px;
 }
 #cd-timeline {
   position: relative;
@@ -305,7 +253,7 @@ a.cd-read-more:hover{text-decoration:none; background-color: #424242;  }
     position: absolute;
     width: 100%;
     left: 115%;
-    top: 6px;
+    top: 10px;
     color:#fff;
     font-size: 16px;
     font-size: 1rem;

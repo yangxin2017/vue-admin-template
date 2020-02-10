@@ -7,15 +7,17 @@
                 <div class="tabs" v-if="viewtype">
                     <ul>
                         <li @click="changetype('text')" :class="{sel: viewtype=='text'}">网页</li>
-                        <li @click="changetype('event')" :class="{sel: viewtype=='event'}">事件关联</li>
+                        <li v-if="showevent" @click="changetype('event')" :class="{sel: viewtype=='event'}">事件关联</li>
+                        <li v-if="showdept" @click="changetype('dept')" :class="{sel: viewtype=='dept'}">单位统计</li>
                     </ul>
                 </div>
-                <res-ptone @showtags="settagids($event)" ref="rlists" :class="{'cms-hide': viewtype=='event'}"></res-ptone>
-                <res-timeline ref="rtimelists" :class="{'cms-hide': viewtype=='text'}"></res-timeline>
+                <res-ptone @showtags="settagids($event)" ref="rlists" :class="{'cms-hide': viewtype!='text'}"></res-ptone>
+                <res-timeline ref="rtimelists" :class="{'cms-hide': viewtype!='event'}"></res-timeline>
+                <statics ref="rstatics" :class="{'cms-hide': viewtype!='dept'}"></statics>
             </div>
             <div class="cms-s-right">
-                <rg-tags ref="taglists"></rg-tags>
-                <rg-links></rg-links>
+                <rg-tags ref="taglists" @clicktag="showtimelinedata($event)"></rg-tags>
+                <rg-links ref="rrglinks" @clickdept="showdeptdata($event)"></rg-links>
             </div>
         </div>
     </div>
@@ -43,13 +45,29 @@ export default {
         searchList(pas){
             this.params = pas
             this.$refs.rlists.initContent(pas)
+            this.viewtype = 'text'
+            this.showevent = false
+            this.showdept = false
+            this.$refs.taglists.filterTags(pas.word ? pas.word : '')
+            this.$refs.rrglinks.clearInfor()
         },
         changetype(type){
             this.viewtype = type
         },
         settagids(ids){
-            console.log(this.$refs)
-            this.$refs.taglists.setTags(ids)
+            
+        },
+        showtimelinedata(id){
+            this.showevent = true
+            this.viewtype = 'event'
+            this.$refs.rtimelists.initContent(id)
+        },
+        showdeptdata(id){
+            this.showdept = true
+            this.viewtype = 'dept'
+            setTimeout(()=>{
+                this.$refs.rstatics.initContent(id)
+            }, 300)
         }
     },
     data(){
@@ -58,10 +76,12 @@ export default {
             viewtype: 'text',
             params: {},
             tagids: '',
+            showevent: false,
+            showdept: false,
 
             links: ``,
             timeline: ``,
-            statics: `<statics></statics>`
+            statics: ``
         }
     }
 }

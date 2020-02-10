@@ -148,3 +148,25 @@ export function getTags(params){
       params
   })
 }
+
+export function getContributes(params){
+  let obj = initUserToken();
+    params = Object.assign(obj, params);
+    
+    return request({
+      url: '/cms/api/contributes',
+      method: 'get',
+      params
+  })
+}
+
+export function getDeptCount(params){
+  let obj = initUserToken();
+    params = Object.assign(obj, params);
+    
+    return request({
+      url: '/cms/api/deptcount',
+      method: 'get',
+      params
+  })
+}
