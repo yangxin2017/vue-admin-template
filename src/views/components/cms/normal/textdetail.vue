@@ -3,12 +3,16 @@
         <p class="desc">
             {{data.desc}}
         </p>
-        <a @click="groute(data)" class="link" :href="data.link">详情>></a>
+
+        <router-link :to="data.link" v-if="data.link">
+            <a class="link">详情>></a>
+        </router-link>
     </div>
 </template>
 <script>
 
 import { getContents } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 
 export default {
     props: {
@@ -27,21 +31,12 @@ export default {
         }
     },
     methods: {
-        groute(item){
-            this.$router.push({ path: 'detail', query: { id: item.id }});
-        }
     },
     mounted(){
         getContents({cid: this.cid, pagesize: this.count}).then(res => {
             if(res.data.length > 0){
                 let c = res.data[0];
-                let tmp = {
-                    id: c.id, title: c.title,
-                    time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                    clicks: c.clicks,
-                    source: c.lydwmc,
-                    desc: c.description
-                }
+                let tmp = new NewsModel(c)
                 this.data = tmp
             }
         })
@@ -58,6 +53,9 @@ export default {
         position:absolute;
         right:10px;bottom:10px;
         color:#ffff00;font-size:16px;
+        &:hover{
+            text-decoration:underline;
+        }
     }
 }
 </style>

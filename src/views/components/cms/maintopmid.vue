@@ -1,5 +1,5 @@
 <template>
-<div class="cms-panel">
+<div class="cms-panel" :style="{height: hei + 'px'}">
     <div class="cms-panel-title">
         <span class="spe-title-font title">{{datas.title}}</span>
         <ul class="menus">
@@ -17,7 +17,7 @@
         <div class="map1" v-if="curType=='hai'">
             <span @click="changeHAI(item.id.value, item.text)" v-for="item in hais" :key="item.id.value" :class="[item.id.value, 'txt', curHai==item.id.value ? 'sel' : '']">{{item.text}}</span>
         </div>
-        <div class="map2" v-if="curType=='guo'">
+        <div ref="mapdom" class="map2" v-if="curType=='guo'">
             <span @click="changeGJ(item.id.value, item.text)" v-for="item in guos" :key="item.id.value" :class="[item.id.value, 'txt', curGj==item.id.value ? 'sel' : '']">{{item.text}}</span>
         </div>
         <div class="map-data">
@@ -26,7 +26,9 @@
             </div>
             <ul class="data-lists">
                 <li v-for="(item,index) in lists" :key="index">
-                    <span class="sjx"></span><a @click="groute(item)">{{item.title}}</a>
+                    <router-link :to="item.link">
+                        <span class="sjx"></span><a >{{item.title}}</a>
+                    </router-link>
                     <div class="data-info">
                         <span class="time">{{item.time}}</span>
                         <span class="source">{{item.source}}</span>
@@ -39,6 +41,8 @@
 </template>
 <script>
 import { getContents, getCategorys, getGuoHais } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
+
 export default {
     props: {
         cname: {
@@ -48,6 +52,10 @@ export default {
         cid: {
             type: String,
             default: '-1'
+        },
+        hei: {
+            type: String,
+            default: '350'
         }
     },
     data(){
@@ -68,9 +76,6 @@ export default {
         }
     },
     methods: {
-        groute(item){
-            this.$router.push({ path: 'detail', query: { id: item.id }});
-        },
         changeTab(item){
             this.curCid = item.id
             this.curType = item.type
@@ -114,12 +119,7 @@ export default {
                 getContents({cid: this.curCid, gjmc: this.curType=='guo' ? this.curGj : this.curHai, pagesize: 5}).then(res => {
                     let arr = [];
                     for(let c of res.data){
-                        let tmp = {
-                            id: c.id, title: c.title,
-                            time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                            clicks: c.clicks,
-                            source: c.lydwmc
-                        }
+                        let tmp = new NewsModel(c)
                         arr.push(tmp)
                     }
                     dd.lists = arr
@@ -164,11 +164,11 @@ export default {
     mounted(){
         this.datas.title = this.cname
 
-        
         this.getBHS()
-        // getContents({cid: this.cid}).then(res => {
-        //     console.log(res)
-        // })
+        let ph = this.$refs.mapdom.parentElement.clientHeight - 20
+        let ch = this.$refs.mapdom.clientHeight
+        let scale = ph / ch
+        this.$refs.mapdom.style.transform = `scale(${scale})`
     }
 }
 </script>
@@ -176,9 +176,15 @@ export default {
 .cms-panel{
     padding:0 0 0 10px;
 }
+.cms-panel-content{
+    position:relative;
+    height:calc(100% - 30px);
+    overflow: hidden;clear:both;
+}
 .map1{
     background:url('../../../assets/cms/content/map1.png') no-repeat 0 0;
-    width:409px;height:301px;float:left;margin:10px 0 0 100px;position:relative;
+    width:409px;height:301px;float:left;margin:10px 0 0 100px;position:absolute;
+    top:50%;margin-top:-150px;
     .txt{
         position:absolute;text-align:center;line-height:20px;width:62px;height:20px;
         font-size:12px;color:#fff;font-weight:bold;cursor:pointer;
@@ -195,7 +201,8 @@ export default {
 }
 .map2{
     background:url('../../../assets/cms/content/map2.png') no-repeat 0 0;
-    width:582px;height:289px;float:left;margin:19px 0 0 32px;position:relative;
+    width:582px;height:289px;float:left;margin:26px 0 0 32px;position:absolute;
+    top:50%;margin-top:-140px;left:0;
     .txt{
         position:absolute;text-align:center;line-height:20px;width:62px;height:20px;
         font-size:12px;color:#fff;font-weight:bold;cursor:pointer;
@@ -211,7 +218,7 @@ export default {
     .feizhou{left:295px;top:148px;}
 }
 .map-data{
-    float:right;
+    float:right;width:36%;
     .map-data-title{
         background:url('../../../assets/cms/content/maptitle.png') no-repeat 0 0;
         width:409px;height:74px;margin:15px 20px 0 0;
@@ -273,7 +280,7 @@ export default {
         float:left;
     }
     .menus{
-        float:left;list-style:none;margin:8px 0 0 0;padding:0 0 0 15px;
+        float:left;list-style:none;margin:5px 0 0 0;padding:0 0 0 15px;
         li{
             float:left;margin:0 13px 0 0;
             a{

@@ -31,7 +31,7 @@
                     </span>
                 </div>
                 <div class="date">
-                    <img src="../../../assets/cms/content/statics/timeline_left.png" alt="">
+                    <img @click="moveDateLeft()" style="cursor:pointer;" src="../../../assets/cms/content/statics/timeline_left.png" alt="">
                     <div class="dates">
                         <div class="line"></div>
                         <div class="linetimebox">
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                     </div>
-                    <img src="../../../assets/cms/content/statics/timeline_right.png" alt="">
+                    <img @click="moveDateRight()" style="cursor:pointer;" src="../../../assets/cms/content/statics/timeline_right.png" alt="">
                 </div>
             </div>
             <div class="anlayer-echarts">
@@ -173,6 +173,12 @@ export default {
         })
     },
     methods: {
+        moveDateLeft(){
+            this.smonth = Math.max(1, this.smonth - 1)
+        },
+        moveDateRight(){
+            this.emonth = Math.main(12, this.emonth + 1)
+        },
         changetotal(){
             this.m_l1()
         },
@@ -187,7 +193,21 @@ export default {
             this.m_l2();
         },
         changemonth(m){
-            // this.emonth = m
+            if(m > this.smonth && m < this.emonth){
+                this.emonth = m
+            }else{
+                if(m == this.smonth){
+                    this.smonth ++
+                }else if(m < this.smonth){
+                    this.smonth = m
+                }
+                if(m == this.emonth){
+                    this.emonth --
+                }else if(m > this.emonth){
+                    this.emonth = m
+                }
+            }
+            this.changeyear()
         },
         //////
         getStime(){ return [this.year, this.smonth, 1].join('-') + ' 00:00:00' },

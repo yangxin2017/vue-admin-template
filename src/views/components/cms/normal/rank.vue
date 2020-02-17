@@ -12,7 +12,7 @@
                 <span class="jt"></span>{{item[0]}}
             </a>
         </div>
-        <div class="li">
+        <div class="li" v-if="words.length > 0">
             <span class="icons i3"></span>
             <a v-for="(item,index) in words" :key="index">
                 <span class="jt"></span>{{item.name}}
@@ -23,6 +23,12 @@
 <script>
 import { getRanks, getWords } from '@/api/cms'
 export default {
+    props: {
+        count: {
+            type: Number,
+            default: 3
+        }
+    },
     data(){
         return {
             hots: [],
@@ -37,9 +43,11 @@ export default {
         getRanks({hot: true}).then(res => {
             this.hots = res.data
         })
-        getWords({pagesize: 3}).then(res => {
-            this.words = res.data
-        })
+        if(this.count > 2){
+            getWords({pagesize: 3}).then(res => {
+                this.words = res.data
+            })
+        }
     }
 }
 </script>

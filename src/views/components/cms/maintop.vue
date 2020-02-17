@@ -1,5 +1,5 @@
 <template>
-    <div class="cms-top">
+    <div class="cms-top" :style="{height: hei + 'px'}">
         <div class="lbt">
             <lbt :cid="lbtid"></lbt>
         </div>
@@ -24,6 +24,10 @@ export default {
         zqbid: {
             type: String,
             default: null
+        },
+        hei: {
+            type: String,
+            default: '280'
         }
     }
 }
@@ -34,9 +38,9 @@ export default {
     justify-content:space-around;
     .lbt{
         flex: 4;margin:20px 20px 0 40px;
-        height:210px;padding:5px;border:solid 1px rgba(255,255,255,0.3);
+        height:calc(100% - 15px);padding:5px;border:solid 1px rgba(255,255,255,0.3);
         border-radius:0 5px 0 5px;
     }
-    .zqb{flex: 5;height:100%;margin:20px 0px 0 0px;}
+    .zqb{flex: 5;height:calc(100% - 15px);margin:20px 0px 0 0px;}
 }
 </style>

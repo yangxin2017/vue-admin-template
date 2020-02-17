@@ -2,11 +2,11 @@
     <div class="cms-main-head">
         <div class="cms-fl left">
             <div class="cms-search">
-                <input type="text"/>
+                <input type="text" @keyup="keySearch($event)" v-model="keyword" />
             </div>
         </div>
         <div class="cms-fl mid">
-            <span class="spe-font">全军联合作战情报网</span>
+            <span class="spe-font">{{hname}}</span>
         </div>
         <div class="cms-fl right">
             <span class="cms-hd-title">Admin</span>
@@ -18,7 +18,24 @@
 </template>
 <script>
 export default {
-    
+    props: {
+        hname: {
+            type: String,
+            default: '全军联合作战情报网'
+        }
+    },
+    data(){
+        return {
+            keyword: ''
+        }
+    },
+    methods: {
+        keySearch(ev){
+            if(ev.keyCode == 13){
+                this.$router.push({ path: 'search', query: { word: this.keyword}});
+            }
+        },
+    }
 }
 </script>
 <style lang="scss" scoped>

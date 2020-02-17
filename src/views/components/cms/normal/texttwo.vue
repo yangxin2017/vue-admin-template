@@ -4,7 +4,9 @@
             <div class="cms-text-com">
                 <div class="title">
                     <span class="sjx"></span>
-                    <a @click="groute(item)">{{item.title}}</a>
+                    <router-link :to="item.link">
+                        <a>{{item.title}}</a>
+                    </router-link>
                 </div>
                 <div class="contents">
                     <span class="time">{{item.time}}</span><br/>
@@ -17,6 +19,7 @@
 <script>
 
 import { getContents } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 
 export default {
     props: {
@@ -27,6 +30,14 @@ export default {
         count: {
             type: Number,
             default: 4
+        },
+        isgw: {
+            type: String,
+            default: 'false'
+        },
+        lydw: {
+            type: String,
+            default: "-1"
         }
     },
     data(){
@@ -35,19 +46,14 @@ export default {
         }
     },
     methods: {
-        groute(item){
-            this.$router.push({ path: 'detail', query: { id: item.id }});
-        }
     },
     mounted(){
-        getContents({cid: this.cid, pagesize: this.count}).then(res => {
+        let isGuanwang = this.isgw == 'true' ? true : false
+        let lydw = this.lydw != "-1" ? this.lydw : undefined
+
+        getContents({cid: this.cid, pagesize: this.count, isgw: isGuanwang, lydw: lydw}).then(res => {
             for(let c of res.data){
-                let tmp = {
-                    id: c.id, title: c.title,
-                    time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                    clicks: c.clicks,
-                    source: c.lydwmc
-                }
+                let tmp = new NewsModel(c)
                 this.data.push(tmp)
             }
         })
@@ -57,31 +63,31 @@ export default {
 <style lang="scss" scoped>
 .lists{
     display: flex;margin:10px 0 0 0;
-    flex-flow: row wrap;width:100%;
-    justify-content: space-between;
+    flex-flow: column;width:100%;
+    height:calc(100% - 18px);
     .li{
-        flex:0 1 100%;
         padding:0 10px 0 0;
-        margin-bottom:8px;
+        margin-bottom: 15px;
     }
 }
 .cms-text-com{
+    display:flex;
     .title{
-        float:left;width:360px;
+        flex:1;
         .sjx{
             background:url('../../../../assets/cms/content/icons.png') no-repeat -11px -67px;
-            width:6px;height:6px;float:left;position:relative;top:4px;
+            width:6px;height:6px;float:left;position:relative;top:7px;left:6px;
         }
         a{
             font-size:16px;color:#fff;
-            margin-left:15px;display:block;height:36px;
+            margin-left:15px;display:block;height:36px;overflow:hidden;
             &:hover{
                 text-decoration:underline;
             }
         }
     }
     .contents{
-        margin:5px 0 0 360px;
+        width:100px;
         text-align:right;
         span{
             color:#B8D517;font-size:14px;

@@ -2,12 +2,14 @@
     <div class="cms-d-container">
         <div class="cms-d-head">
             <div class="cms-fl left">
-                <div class="cms-search">
-                    <input type="text"/>
+                <div class="cms-search" v-if="showsearch">
+                    <input type="text" @keyup="keySearch($event)" v-model="keyword" />
                 </div>
             </div>
             <div class="cms-fl mid">
-                <span class="spe-font">全军联合作战情报网</span>
+                <router-link to="main">
+                    <span class="spe-font">全军联合作战情报网</span>
+                </router-link>
             </div>
             <div class="cms-fl right">
                 <span class="cms-hd-title">Admin</span>
@@ -19,8 +21,28 @@
     </div>
 </template>
 <script>
+
 export default {
-    
+    props: {
+        showsearch: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data(){
+        return {
+            keyword: ''
+        }
+    },
+    methods: {
+        keySearch(ev){
+            if(ev.keyCode == 13){
+                this.$router.push({ path: 'search', query: { word: this.keyword}});
+            }
+        }
+    },
+    mounted(){
+    }
 }
 </script>
 <style lang="scss" scoped>
@@ -33,6 +55,9 @@ export default {
 }
 .cms-fl{
     flex-grow: 1;
+    .spe-font{
+        cursor:pointer;
+    }
     
     .cms-search{
         background:url('../../../../assets/cms/header/inp_search.png') no-repeat 0 0;

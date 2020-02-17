@@ -170,3 +170,14 @@ export function getDeptCount(params){
       params
   })
 }
+
+export function getDeptById(params){
+  let obj = initUserToken();
+    params = Object.assign(obj, params);
+    
+    return request({
+      url: '/cms/api/sigdept',
+      method: 'get',
+      params
+  })
+}

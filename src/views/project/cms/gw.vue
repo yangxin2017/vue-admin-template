@@ -2,79 +2,44 @@
     <div class="cms-bg">
         <comrender :html="head" />
         <div class="cms-contents">
+            
             <div class="cms-con-left">
-                <div class="cms-com" v-if="l1">
+                <div class="cms-com">
                     <comrender :html="l1" />
                 </div>
                 <div class="cms-com">
                     <comrender :html="l2" />
                 </div>
-                <div class="cms-com">
-                    <comrender :html="l3" />
-                </div>
-                <div class="cms-com">
-                    <comrender :html="l4" />
-                </div>
             </div>
+
             <div class="cms-con-mid" :style="{width: midwidth + 'px'}">
-                <div class="cms-com midone">
-                    <div class="line-top">
-                        <span class="lf"></span>
-                        <div class="md">
-                            <span class="md-in"></span>
-                            <span class="md-line"></span>
-                        </div>
-                        <span class="rg"></span>
-                    </div>
+                <div class="cms-com">
                     <comrender :html="t1" />
                 </div>
-                <div class="cms-com midone midbot">
-                    <div class="line-top">
-                        <span class="lf"></span>
-                        <div class="md">
-                            <span class="md-in"></span>
-                            <span class="md-line"></span>
-                        </div>
-                        <span class="rg"></span>
-                    </div>
+                <div class="cms-com">
                     <comrender :html="t2" />
                 </div>
-                <div class="cms-com dflex">
-                    <div class="cms-com-in" style="margin-right:10px;">
-                        <comrender :html="b1" />    
-                    </div>
-                    <div class="cms-com-in">
-                        <comrender :html="b2" />   
-                    </div>
+                <div class="cms-com">
+                    <comrender :html="b1" />
                 </div>
             </div>
+
             <div class="cms-con-right">
-                <!-- <comrender :html="l1" /> -->
-                <div class="cms-com">
-                    <comrender :html="r1" />
-                </div>
                 <div class="cms-com">
                     <comrender :html="r2" />
                 </div>
                 <div class="cms-com">
                     <comrender :html="r3" />
                 </div>
-                <div class="cms-com">
-                    <comrender :html="r4" />
-                </div>
-                <div class="cms-com" style="position:relative;">
-                    <comrender :html="r5" />
-                </div>
             </div>
-        </div>
-        <div class="footer">
-            <comrender :html="ft" />
+
         </div>
     </div>
 </template>
 <script>
+
 import comrender from '@/views/components/render'
-import { getCategorys, login } from '@/api/cms';
+import { getCategorys, getDeptById } from '@/api/cms';
 
 export default {
     components: {
@@ -82,24 +47,17 @@ export default {
     },
     data(){
         return {
-            head: `<main-header></main-header>`,
+            head: ``,
             l1: ``,
             l2: ``,
-            l3: ``,
-            l4: ``,
-            t1: ``,
-            t2: ``,
-            r1: ``,
             r2: ``,
             r3: ``,
-            r4: ``,
-            r5: ``,
+            t1: ``,
+            t2: ``,
             b1: ``,
             b2: ``,
-            ft: `<main-footer></main-footer>`,
-            ms: ``,
-            showTJ: false,
-            midwidth: 1120
+            midwidth: 1120,
+            dept: null
         }
     },
     methods: {
@@ -115,7 +73,14 @@ export default {
         }
     },
     mounted(){
-        let relative = this.$store.state.app.cms
+        let lydw = this.$route.query.id
+
+        getDeptById({deptId: lydw}).then(res => {
+            this.dept = res.data
+            this.head = `<main-header hname="${res.data.name}"></main-header>`
+        })
+
+        let relative = this.$store.state.app.cms_gw
         
         this.midwidth = relative.other.meta.midwidth
 
@@ -126,21 +91,18 @@ export default {
                     let hstr = relative[k].height ? `hei=${relative[k].height}` : ''
                     let pstr = relative[k].percount ? `:percount=${relative[k].percount}` : ''
 
-                    this[k] = `<main-panel dir="${relative[k].dir}" ${hstr} ${pstr} pkey="${k}" cid="${relative[k].id}" cname="${d.name}"></main-panel>`
+                    this[k] = `<main-panel lydw="${lydw}" isgw="true" dir="${relative[k].dir}" ${hstr} ${pstr} pkey="${k}" cid="${relative[k].id}" cname="${d.name}"></main-panel>`
                 }else{
-                    let d = this.getCategoryById(res.data, relative.other.zydx.id)
-                    this.t2 = `<main-top-mid hei="${relative.other.zydx.height}" cname="${d.name}" cid="${d.id}"></main-top-mid>`
+                    let d = this.getCategoryById(res.data, relative.other.timeline.id)
+                    this.t2 = `<gw-timeline isgw="true" lydw="${lydw}" hei="${relative.other.timeline.height}" cname="${d.name}" cid="${d.id}"></gw-timeline>`
                 }
             }
         });
         let obj = relative['other'];
-        this.t1 = `<main-top hei="${obj.lbt.height}" lbtid="${obj.lbt.id}" zqbid="${obj.zqb.id}"></main-top>`
-        this.r4 = `<main-panel :count="${obj.ranks.count}" type="rank" dir="right" hei="180" spec="rank" cname="排行榜"></main-panel>`
-        this.r5 = `<main-contact :count="${obj.contact.count}"></main-contact>`
 
-
-        /////
-        // login({username: 'f1', password: '123456'});
+        this.t1 = `<zqb-full cid="${obj.zqb.id}" hei="${obj.zqb.height}" :isgw="true" lydw="${lydw}"></zqb-full>`
+        // this.r4 = `<main-panel :count="${obj.ranks.count}" type="rank" dir="right" hei="180" spec="rank" cname="排行榜"></main-panel>`
+        // this.r5 = `<main-contact :count="${obj.contact.count}"></main-contact>`
     }
 }
 </script>
@@ -151,7 +113,7 @@ export default {
     background-size:100% 100%;
 }
 .cms-contents{
-    display:flex;height:calc(100% - 256px);
+    display:flex;height:calc(100% - 106px);
 
     .cms-con-right{
         flex:1;height:calc(100% + 20px);
@@ -228,20 +190,5 @@ export default {
             }
         }
     }
-}
-</style>
-<style>
-input:outline,input:focus{
-    border:none;
-}
-.spe-font{
-    font-size:46px;color:#fff;
-}
-.spe-title-font{
-    font-family:'微软雅黑';
-    background-image:-webkit-linear-gradient(top,#ffffff,#E0FF0F); 
-    background-clip:text;
-    -webkit-text-fill-color:transparent;
-    -webkit-text-shadow:1px 1px 4px #ccc;
 }
 </style>

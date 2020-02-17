@@ -1,14 +1,17 @@
 <template>
     <div class="cms-videos">
-        <div class="li" v-for="item in data" :key="item.id">
+        <div class="li" v-for="item in data" :key="item.id" :style="{'margin-right': data.length==1 ? 0 : '25px'}">
             <video :src="item.video" controls="controls"></video>
-            <a @click="groute(item)" class="title">{{item.title}}</a>
+            <router-link :to="item.link">
+                <a class="title">{{item.title}}</a>
+            </router-link>
         </div>
     </div>
 </template>
 <script>
 
 import { getContents } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 
 export default {
     props: {
@@ -27,21 +30,11 @@ export default {
         }
     },
     methods: {
-        groute(item){
-            this.$router.push({ path: 'detail', query: { id: item.id }});
-        }
     },
     mounted(){
         getContents({cid: this.cid, pagesize: this.count}).then(res => {
             for(let c of res.data){
-                let tmp = {
-                    id: c.id, title: c.title,
-                    time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                    clicks: c.clicks,
-                    source: c.lydwmc,
-                    pic: '/cms/webfile/' + c.tpwj,
-                    video: '/cms/webfile/' + c.spwj
-                }
+                let tmp = new NewsModel(c)
                 this.data.push(tmp)
             }
         })
@@ -51,17 +44,17 @@ export default {
 <style lang="scss" scoped>
 .cms-videos{
     display:flex;
+    height: calc(100% - 20px);
     .li{
-        flex:0 1 50%;margin-top:5px;
+        flex:1;margin-top:5px;padding:9px;margin-right:25px;
         background:url('../../../../assets/cms/content/r1bg.png') no-repeat left 0;
-        height:152px;position:relative;text-align:left;
+        height:100%;position:relative;text-align:left;background-size:100% 100%;
         video{
             object-fit: fill;
-            width:90%;height:96%;
-            margin:1% 0 0 1%;
+            width:100%;height:96%;
         }
         .title{
-            position:absolute;width:92%;height:25px;background:rgba(0,0,0,0.5);
+            position:absolute;width:100%;height:25px;background:rgba(0,0,0,0.5);
             color:#fff;left:0px;bottom:0px;padding:0 0 0 20px;
             &:hover{
                 text-decoration:underline;

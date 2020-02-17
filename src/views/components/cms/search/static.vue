@@ -55,7 +55,7 @@ export default {
     methods: {
         setTodayCount(id){
             let stime = moment(new Date()).subtract(1, 'days').format('YYYY-MM-DD 00:00:00');
-            let etime = moment(new Date()).format('YYYY-MM-DD 00:00:00');
+            let etime = moment(new Date()).format('YYYY-MM-DD 23:59:59');
             getDeptCount({deptId: id, stime: stime, etime: etime}).then(res => {
                 this.todaycount = res.data
             })

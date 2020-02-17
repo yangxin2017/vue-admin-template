@@ -1,10 +1,13 @@
 <template>
     <div class="cms-bg">
         <comrender :html="head" />
-        <div class="cms-d-content" v-if="content">
-            <div class="cms-d-left">
+        <div class="cms-d-content" v-if="content" @mousemove="draging($event)" @mouseup="dragEnd($event)">
+            <div class="cms-d-left" ref="leftpanel" :style="{width: lfwidth + 'px'}">
                 <!-- <comrender :html="left" /> -->
                 <detail-left @changeContent="changeContent($event)" :cid="content.cid" :contentId="content.id"></detail-left>
+                <div class="drag-con" @mousedown="startDrag($event)">
+                    <i class="el-icon-more"></i>
+                </div>
             </div>
             <div class="cms-d-right">
                 <detail-right :obj="content"></detail-right>
@@ -16,6 +19,7 @@
 
 import comrender from '@/views/components/render'
 import { getContent, getCategorys, getTags } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 var detailleft = () => import('@/views/components/cms/detail/detailleft')
 var detailright = () => import('@/views/components/cms/detail/detailright')
 
@@ -28,11 +32,28 @@ export default {
     data(){
         return {
             contentId: -1,
-            head: `<detail-head></detail-head>`,
-            content: false
+            head: `<detail-head :showsearch="true"></detail-head>`,
+            content: false,
+            isdraging: false,
+            lf: null,
+            lfwidth: 580
         }
     },
     methods: {
+        startDrag(ev){
+            this.isdraging = true
+        },
+        draging(ev){
+            if(this.isdraging){
+                this.lfwidth += ev.movementX
+                if(this.lfwidth < 400){
+                    this.lfwidth = 400
+                }
+            }
+        },
+        dragEnd(ev){
+            this.isdraging = false
+        },
         changeContent(id){
             this.contentId = id
             this.initContent()
@@ -42,24 +63,18 @@ export default {
                 let caid = res.data.categoryId
 
                 let c = res.data
-                let tmp = {
-                    id: c.id, title: c.title,
-                    cid: c.categoryId,
-                    time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                    clicks: c.clicks,
-                    source: c.lydwmc,
-                    desc: c.description,
-                    pic: c.tpwj ? '/cms/webfile/' + c.tpwj : false,
-                    video: c.spwj ? '/cms/webfile/' + c.spwj : false,
-                    tags: []
-                }
+                let tmp = new NewsModel(c)
 
-                let tagid = c.tagIds.split(' ').join(',')
-                getTags({ids: tagid}).then(restags => {
-                    tmp.tags = restags.data ? restags.data : []
+                if(c.tagIds){
+                    let tagid = c.tagIds.split(' ').join(',')
+                    getTags({ids: tagid}).then(restags => {
+                        tmp.tags = restags.data ? restags.data : []
 
+                        this.content = tmp
+                    })
+                }else{
                     this.content = tmp
-                })
+                }
                 
             })
         }
@@ -73,7 +88,7 @@ export default {
 <style lang="scss" scoped>
 .cms-bg{
     background:#010E04;
-    width:2560px;height:1080px;
+    width:100%;height:100%;
     background-size:100% 100%;
 }
 .cms-d-content{
@@ -82,7 +97,15 @@ export default {
     margin:10px auto;display:flex;
     
     .cms-d-left{
+        width: 580px;
         border:solid 1px #B9D717;
+        position:relative;
+        .drag-con{
+            width:5px;background:#556108;
+            height:100%;position:absolute;right:0px;top:0px;
+            border-left:solid 1px #B9D717;cursor: col-resize;
+            i{color:#fff;transform:rotate(90deg);position:absolute;left:-6px;top:50%;margin-top:-5px;}
+        }
     }
     .cms-d-right{
         flex: 1

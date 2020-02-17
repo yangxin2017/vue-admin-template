@@ -39,7 +39,7 @@ module.exports = {
     },
     proxy: {
       '/cms': {
-        target: 'http://192.168.1.3:30003',
+        target: 'http://192.168.1.114:30003',
         changeOrigin: true,
         secure: false,
         pathRewrite: { '^/cms': '/cms' }

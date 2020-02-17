@@ -62,6 +62,7 @@
 </template>
 <script>
 import { getAllCategorys, getSearchs, getContents } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 
 export default {
     props: {
@@ -134,12 +135,7 @@ export default {
                 this.total = res.total
                 let arr = []
                 for(let c of res.data){
-                    let tmp = {
-                        id: c.id, title: c.title,
-                        time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                        clicks: c.clicks,
-                        source: c.lydwmc
-                    }
+                    let tmp = new NewsModel(c)
                     arr.push(tmp)
                 }
                 this.contents = arr
@@ -157,6 +153,7 @@ export default {
         }
     },
     mounted(){
+        this.pagesize = this.$store.state.app.cms.other.meta.count.detailleft
         this.caid = this.cid
         getAllCategorys({}).then(res => {
             this.cates = res.data
@@ -187,6 +184,7 @@ export default {
             }
             .tl{
                 color:#fff;font-size:14px;margin:0 0 0 10px;flex:1;
+                height:35px;
                 &:hover{text-decoration:underline;}
                 &.sel{
                     color:#8EA413;font-weight: bold;
@@ -233,17 +231,18 @@ export default {
 }
 
 .cms-d-title{
-    background:url('../../../../assets/cms/detail/headwg.png') no-repeat 0 0;
-    width:560px;height:58px;border-bottom:solid 2px #5C6C0D;padding:12px 0 0 20px;
+    background:url('../../../../assets/cms/detail/headwg.png') repeat-x 0 0;
+    width:100%;height:58px;border-bottom:solid 2px #5C6C0D;padding:12px 0 0 20px;
     select{font-weight:bold;}
 }
 .cms-d-menu{
     height:40px;border-bottom:dotted 2px #5C6C0D;
     .menus{
-        list-style:none;margin:0px 0 0 25px;padding:0;
-        position:relative;top:16px;
+        list-style:none;padding:0px 20px 0 5px;margin:0;
+        position:relative;top:16px;width:100%;overflow:auto;
+        white-space:nowrap;
         li{
-            float:left;margin:0 20px 0 0;padding:0 5px 5px 5px;
+            margin:0 0px 0 20px;padding:0 5px 5px 5px;display:inline-block;
             color:#fff;font-size:14px;cursor:pointer;
             &.sel,&:hover{
                 border-bottom:solid 3px #E1FF0F;font-weight:bold;

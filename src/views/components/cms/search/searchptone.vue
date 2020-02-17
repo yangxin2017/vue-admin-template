@@ -7,12 +7,14 @@
         </div>
         <div class="search-con">
             <div class="inpsearch">
-                <input class="inp" type="text" v-model="keyword" placeholder="请输入搜索内容" />
+                <input @keyup="keySearch($event)" class="inp" type="text" v-model="keyword" placeholder="请输入搜索内容" />
                 <div class="btn" @click="searchContent">
                     <span class="icon-search"></span>
                 </div>
             </div>
-            <a class="btn-change">普通模式</a>
+            <router-link to="search">
+                <a class="btn-change">专题模式</a>
+            </router-link>
         </div>
         <div class="hots">
             <a class="word" @click="searchHots(item.name)" v-for="item in hots" :key="item.id"><span class="dot"></span>{{item.name}}</a>
@@ -38,8 +40,8 @@
                 <div class="lines-one" style="margin-top:15px;">
                     <span class="txt">单位</span>
                     <ul class="depts">
-                        <li @click="curDid=-1" :class="{sel: curDid==-1}">全部</li>
-                        <li @click="curDid=item.id" v-for="item in depts" :key="item.id" :class="{sel: item.id==curDid}">{{item.name}}</li>
+                        <li @click="setDeptId(null)" :class="{sel: curDid==-1}">全部</li>
+                        <li @click="setDeptId(item)" v-for="item in depts" :key="item.id" :class="{sel: item.id==curDid}">{{item.name}}</li>
                     </ul>
                 </div>
             </div>
@@ -67,6 +69,21 @@ export default {
         }
     },
     methods: {
+        keySearch(ev){
+            if(ev.keyCode == 13){
+                this.searchContent()
+            }
+        },
+        setDeptId(item){
+            if(item){
+                this.curDid = item.id
+            }else{
+                this.curDid = -1
+            }
+            if(this.keyword != ""){
+                this.searchContent()
+            }
+        },
         searchContent(){
             this.$emit("searchContent", {
                 stime: this.stime ? this.stime : undefined,
@@ -81,9 +98,15 @@ export default {
         searchHots(text){
             this.keyword = text
             this.searchContent();
+        },
+        setKeyword(keyword){
+            this.keyword = keyword
+            this.searchContent()
         }
     },
     mounted(){
+        this.pagesize = this.$store.state.app.cms.other.meta.count.searchbottom
+
         getCategorys({}).then(res => {
             let tmp = [{name: '全部', id: -1}, ...res.data]
             this.cates = tmp

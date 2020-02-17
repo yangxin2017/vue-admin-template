@@ -7,7 +7,10 @@
                 </div>
 
                 <div class="cd-timeline-content">
-                    <p>{{item.title}}
+                    <p class="links">
+                      <router-link :to="item.link">
+                      {{item.title}}
+                      </router-link>
                     </p>
                     <p>
                         <span class="source">{{item.source}}</span>
@@ -26,6 +29,7 @@
 <script>
 
 import { getContents } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 
 export default {
     data(){
@@ -40,12 +44,7 @@ export default {
         getContents({tagid: tagid}).then(res => {
           let arr = [];
           for(let c of res.data){
-                let tmp = {
-                    id: c.id, title: c.title,
-                    time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                    clicks: c.clicks,
-                    source: c.lydwmc
-                }
+                let tmp = new NewsModel(c)
                 arr.push(tmp)
           }
           this.datas = arr
@@ -174,6 +173,10 @@ export default {
   border-radius: 0.25em;
   padding: 1em;
   box-shadow: 0 3px 0 #d7e4ed;
+  .links {cursor: pointer;}
+  .links:hover{
+    text-decoration:underline;
+  }
 }
 .cd-timeline-content:after {
   content: "";

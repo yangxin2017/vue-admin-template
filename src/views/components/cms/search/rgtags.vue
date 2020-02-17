@@ -1,8 +1,8 @@
 <template>
-    <div class="tags">
+    <div class="tags" v-if="datas.length > 0">
         <b>相关事件</b>
         <ul class="tls">
-            <li @click="choosetag(item)" :class="{sel: item.id==curtagid}" v-for="item in datas" :key="item.id">{{item.name}}</li>
+            <li @click="choosetag(item, true)" :class="{sel: item.id==curtagid}" v-for="item in datas" :key="item.id">{{item.name}}</li>
         </ul>
     </div>
 </template>
@@ -19,12 +19,11 @@ export default {
         }
     },
     methods: {
-        choosetag(item){
+        choosetag(item, isclick=false){
             this.curtagid = item.id
-            this.$emit('clicktag', item.id)
+            this.$emit('clicktag', {id: item.id, clicked: isclick, keyword: item.name})
         },
         filterTags(keyword){
-            console.log(keyword, this.alldatas)
             let inx = 0
             let arr = []
             for(let d of this.alldatas){
@@ -36,6 +35,10 @@ export default {
                 }
             }
             this.datas = arr
+            //// choose first one
+            if(this.datas.length > 0){
+                this.choosetag(this.datas[0])
+            }
         }
     },
     mounted(){

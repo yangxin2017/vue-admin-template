@@ -4,7 +4,10 @@
         <div class="md" v-for="item in datas" :key="item.id">
             <div class="tls">
                 <span class="sjx"></span>
-                <a class="title">{{item.title}}</a>
+
+                <router-link :to="item.link">
+                    <a class="title">{{item.title}}</a>
+                </router-link>
             </div>
             <div class="tls-infor">
                 <span class="time">{{item.time}}</span>
@@ -16,6 +19,8 @@
     <div class="no-data" v-if="datas.length == 0">
         没有查询到数据。
     </div>
+
+    <br style="clear:both;" />
 
     <div class="cms-d-pages" v-if="datas.length > 0">
         <el-pagination
@@ -31,6 +36,7 @@
 <script>
 
 import { getSearchs } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 
 export default {
     props: {
@@ -43,25 +49,28 @@ export default {
         }
     },
     methods: {
-        initContent(pa){
-            this.param = pa 
+        initDatalist(outputtag=true){
             getSearchs(this.param).then(res => {
                 let arr = []
                 for(let c of res.data){
-                    let tmp = {
-                        id: c.id, title: c.title,
-                        time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                        clicks: c.clicks,
-                        source: c.lydwmc,
-                        tagIds: c.tagIds
-                    }
+                    let tmp = new NewsModel(c)
                     arr.push(tmp)
                 }
                 this.datas = arr
                 this.total = res.total
                 /////
-                this.outputRelInfo()
+                if(outputtag){
+                    this.outputRelInfo()
+                }
             })
+        },
+        initContent(pa){
+            this.param = pa 
+            this.initDatalist()
+        },
+        setWord(word){
+            this.param.word = word
+            this.initDatalist(false)
         },
         outputRelInfo(){
             let tagids = []
@@ -105,12 +114,10 @@ export default {
     margin:20px 0 0 0;
 }
 .lists{
-    display:flex;
-    flex-wrap:wrap;
     padding:10px 0 0 0;
     height:calc(100% - 70px);
-    .md{
-        flex: 0 1 23%;margin:10px 2% 10px 0;
+    .md{margin:10px 2% 10px 0;
+        width: 23%;float:left;
         .tls{
             display:flex;
             .sjx{
@@ -119,6 +126,7 @@ export default {
             }
             .title{
                 font-size:14px;color:#fff;margin-left:5px;height:34px;overflow:hidden;
+                display:inline-block;height:35px;
                 &:hover{
                     text-decoration:underline;
                 }

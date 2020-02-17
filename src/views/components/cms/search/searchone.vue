@@ -7,7 +7,7 @@
             <a class="menu-more" @click="showmore=!showmore">{{showmore ? '收起' : '更多'}}<span class="icon-more"></span></a>
         </div>
         <div class="inpsearch">
-            <input class="inp" v-model="keyword" type="text" placeholder="请输入搜索内容" />
+            <input class="inp" @keyup="keySearch($event)" v-model="keyword" type="text" placeholder="请输入搜索内容" />
             <div class="btn" @click="search">
                 <span class="icon-search"></span>
             </div>
@@ -38,7 +38,9 @@
                     </ul>
                 </div>
             </div>
-            <a class="btn-change">普通模式</a>
+            <router-link to="searchpt">
+                <a class="btn-change" >普通模式</a>
+            </router-link>
         </div>
     </div>
 </template>
@@ -51,6 +53,10 @@ export default {
         cates: {
             type: Array,
             default: []
+        },
+        keywords: {
+            type: String,
+            default: ''
         }
     },
     data(){
@@ -67,6 +73,11 @@ export default {
         }
     },
     methods: {
+        keySearch(ev){
+            if(ev.keyCode == 13){
+                this.search()
+            }
+        },
         chooseCid(item){
             this.curCid = item.id
         },
@@ -82,14 +93,21 @@ export default {
                     pagesize: this.pagesize
                 })
         },
-        initDept(){
+        initDept(callback){
             getDepts({}).then(res => {
                 this.depts = res.data
+                callback()
             })
         }
     },
     mounted(){
-        this.initDept()
+        this.pagesize = this.$store.state.app.cms.other.meta.count.searchleft
+        this.keyword = this.keywords
+        this.initDept(() => {
+            if(this.keyword){
+                this.search()
+            }
+        })
     }
 }
 </script>

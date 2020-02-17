@@ -3,7 +3,7 @@
         <comrender :html="head" />
         <div class="cms-s-con">
             <div class="cms-s-left">
-                <search-one :cates="cates" @searchContent="searchList($event)"></search-one>
+                <search-one :keywords="keyword" :cates="cates" @searchContent="searchList($event)"></search-one>
             </div>
             <div class="cms-s-right">
                 <res-one v-for="item in resultList" :key="item.inx" :pas="item.param" :uuid="item.inx" @closepanel="hidethis($event)"></res-one>
@@ -28,7 +28,8 @@ export default {
             head: `<detail-head></detail-head>`,
             cates: [],
             resultList: [],
-            inx: 1
+            inx: 1,
+            keyword: ''
         }
     },
     methods: {
@@ -45,6 +46,8 @@ export default {
         }
     },
     mounted(){
+        this.keyword = this.$route.query.word;
+
         getCategorys({}).then(res => {
             let tmp = [{name: '全部', id: -1}, ...res.data]
             this.cates = tmp
@@ -55,7 +58,7 @@ export default {
 <style lang="scss" scoped>
 .cms-bg{
     background:#010E04;
-    width:2560px;height:1080px;
+    width:100%;height:100%;
     background-size:100% 100%;
     .cms-s-con{
         width:95%;height:calc(100% - 95px);margin:10px auto;display:flex;

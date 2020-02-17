@@ -1,6 +1,6 @@
 <template>
     <div class="cms-lbt">
-        <el-carousel trigger="click" height="198px" indicator-position="none" arrow="hover">
+        <el-carousel trigger="click" indicator-position="none" arrow="hover">
             <el-carousel-item v-for="item in data" :key="item.id">
                 <div class="img">
                     <img width="100%" height="100%" :src="item.pic" alt="" />
@@ -10,7 +10,10 @@
     </div>
 </template>
 <script>
+
 import { getContents } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
+
 export default {
     props: {
         cid: {
@@ -26,9 +29,9 @@ export default {
     mounted(){
         getContents({cid: this.cid, pagesize: 3}).then(res => {
             for(let d of res.data){
-                d.pic = '/cms/webfile/' + d.tpwj
+                let m = new NewsModel(d)
+                this.data.push(m)
             }
-            this.data = res.data
         })
     }
 }

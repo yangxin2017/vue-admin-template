@@ -15,6 +15,7 @@
 <script>
 
 import { getContents } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 
 export default {
     props: {
@@ -25,6 +26,10 @@ export default {
         count: {
             type: Number,
             default: 4
+        },
+        percount: {
+            type: Number,
+            default: 5
         }
     },
     data(){
@@ -34,23 +39,15 @@ export default {
     },
     mounted(){
         getContents({cid: this.cid, pagesize: this.count}).then(res => {
-            let len = Math.ceil(res.data.length / 5)
+            let len = Math.ceil(res.data.length / this.percount)
             let finarr = [];
             for(let i=0;i<len;i++){
                 finarr.push([])
-                for(let j=0;j<5;j++){
-                    let inx = i * 5 + j
+                for(let j=0;j<this.percount;j++){
+                    let inx = i * this.percount + j
                     if(inx < res.data.length){
                         let c = res.data[inx]
-                        let tmp = {
-                            id: c.id, title: c.title,
-                            time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                            clicks: c.clicks,
-                            source: c.lydwmc,
-                            pic: '/cms/webfile/' + c.tpwj,
-                            video: '/cms/webfile/' + c.spwj,
-                            link: c.wldz
-                        }
+                        let tmp = new NewsModel(c)
                         finarr[i].push(tmp)
                     }
                 }
@@ -64,7 +61,7 @@ export default {
 .syses{
     display:flex;margin-top:20px;
     .li{
-        flex:0 1 20%;position:relative;text-align:center;
+        position:relative;text-align:center;flex:1;
         a{color:#fff;display:inline-block;width:80px;height:25px;overflow:hidden;font-weight:bold;font-size:12px;margin-top:8px;position:absolute;top:51px;left:50%;margin-left:-40px;}
         img{width:60px;height:70px;}
     }

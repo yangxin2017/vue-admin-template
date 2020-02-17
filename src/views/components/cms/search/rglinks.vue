@@ -95,6 +95,7 @@ export default {
             border-bottom:dotted 1px #fff;display:flex;padding:0 0 5px 0;margin:0 0 20px 0;
             .num{
                 width:40px;font-size:14px;font-weight:bold;color:#fff;
+                font-family:ZZ;color:#eee;
             }
             .title{
                 font-size:14px;color:#fff;flex:1;cursor:pointer;

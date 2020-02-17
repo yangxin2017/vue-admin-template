@@ -12,6 +12,8 @@ var mainstas = () => import('@/views/components/cms/mainstatics')
 //
 var detailhead = () => import('@/views/components/cms/detail/detailhead')
 //
+var zqbfull = () => import('@/views/components/cms/normal/zqbfull')
+var gwtimeline = () => import('@/views/components/cms/gwtimeline')
 
 export default {
   props: {
@@ -38,6 +40,8 @@ export default {
         //
         'detail-head': detailhead,
         //
+        'zqb-full': zqbfull,
+        'gw-timeline': gwtimeline
       },
       template: this.html
     })

@@ -4,7 +4,9 @@
         <div class="cms-pictxt-bg">
             <img class="img" :src="item.pic" alt="" />
             <p class="title">
-                <a @click="groute(item)" :href="item.link">{{item.title}}</a>
+                <router-link :to="item.link">
+                    <a>{{item.title}}</a>
+                </router-link>
             </p>
         </div>    
     </div>
@@ -13,6 +15,7 @@
 <script>
 
 import { getContents } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 
 export default {
     props: {
@@ -23,6 +26,14 @@ export default {
         count: {
             type: Number,
             default: 4
+        },
+        isgw: {
+            type: String,
+            default: 'false'
+        },
+        lydw: {
+            type: String,
+            default: "-1"
         }
     },
     data(){
@@ -31,21 +42,15 @@ export default {
         }
     },
     methods: {
-        groute(item){
-            this.$router.push({ path: 'detail', query: { id: item.id }});
-        }
     },
     mounted(){
-        getContents({cid: this.cid, pagesize: this.count}).then(res => {
+        let isGuanwang = this.isgw == 'true' ? true : false
+        let lydw = this.lydw != "-1" ? this.lydw : undefined
+
+        getContents({cid: this.cid, pagesize: this.count, isgw: isGuanwang, lydw: lydw}).then(res => {
             for(let c of res.data){
-                let tmp = {
-                    id: c.id, title: c.title,
-                    time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                    clicks: c.clicks,
-                    source: c.lydwmc,
-                    pic: '/cms/webfile/' + c.tpwj
-                }
-                this.data.push(tmp)
+                let m = new NewsModel(c)
+                this.data.push(m)
             }
         })
     }
@@ -53,15 +58,17 @@ export default {
 </script>
 <style lang="scss" scoped>
     .lists{
-        display: flex;margin:10px 0 0 0;
+        display: block;margin:10px 0 0 0;
         flex-direction: row;
+        flex-wrap: wrap;
         .li{
-            flex: 0 1 25%;
+            float:left;margin-bottom:15px;
+            text-align:center;margin-right:1px;
         }
     }
     .cms-pictxt-bg{
         background:url('../../../../assets/cms/content/icons.png') no-repeat -7px -350px;
-        width:135px;height:148px;position:relative;
+        width:135px;height:148px;position:relative;display: inline-block;
         .img{
             width:120px;height:75px;position:absolute;top:5px;left:8px;
         }

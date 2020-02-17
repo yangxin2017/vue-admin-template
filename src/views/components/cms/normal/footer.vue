@@ -1,9 +1,15 @@
 <template>
     <div class="cms-footer">
-        <div :class="item.cls" v-for="(item, index) in data" :key="index">
-            <span>{{item.name}}</span>
+        <div class="depts">
+            <div class="dp" v-for="(item, index) in data" :key="index">
+                <div :class="item.cls">
+                    <router-link :to="'gw?id=' + item.id">
+                        <span>{{item.name}}</span>
+                    </router-link>
+                </div>
+            </div>
         </div>
-        <div class="ic ixx" @click="showStatics">
+        <div class="ixx" @click="showStatics">
         </div>
         <main-statics v-if="showstatics" v-on:hide="hideStatics"></main-statics>
     </div>
@@ -45,9 +51,18 @@ export default {
 .cms-footer{
     width:100%;display:flex;
     padding:17px 30px 0 30px;
+    justify-content:space-between;
+    .depts{
+        flex:1;display:flex;
+    }
+
+    .ixx{background:url('../../../../assets/cms/content/jhs.png') no-repeat -2409px 0;width:79px;height:117px;}
+    .dp{
+        flex:1;text-align:center;
+    }
     .ic{
-        flex:1;background:url('../../../../assets/cms/content/jhs.png') no-repeat 0 0;
-        width:105px;height:117px;margin-right:90px;
+        background:url('../../../../assets/cms/content/jhs.png') no-repeat 0 0;
+        width:105px;height:117px;display:inline-block;
         span{
             font-family:zz;
             font-size:16px;color:#fff;display:inline-block;
@@ -65,7 +80,6 @@ export default {
         &.i10{background-position:-1782px 0;}
         &.i11{background-position:-1992px 0;}
         &.i12{background-position:-2202px 0;}
-        &.ixx{background-position:-2407px 0;width:79px;margin-right:0;}
     }
 }
 </style>

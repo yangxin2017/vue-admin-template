@@ -1,79 +1,86 @@
 <template>
-<div class="cms-panel">
-    <div class="cms-panel-title">
-        <span class="spe-title-font title">执勤表</span>
-        <span class="zqb-select">
-            <select @change="changeDept($event)">
-                <option v-for="item in data" :key="item.id" :value="item.id">{{item.name}}</option>
-            </select>
-        </span>
-        <div class="bot-line">
-            <span class="dot1"></span>
-            <span class="dot-line"></span>
-            <span class="dot2"></span>
+    <div class="cms-panel" :style="{height: hei + 'px'}">
+        <div class="cms-panel-title">
+            <span class="spe-title-font title">执勤表</span>
+            <div class="bot-line">
+                <span class="dot1"></span>
+                <span class="dot-line"></span>
+                <span class="dot2"></span>
+            </div>
+        </div>   
+        <div class="cms-panel-content">
+            <table class="cms-zqb-table">
+                <tr>
+                    <td>席位</td>
+                    <td>姓名</td>
+                    <td>电话</td>
+                </tr>
+                <tr v-for="(item, index) in ltables" :key="index">
+                    <td>{{item.xw}}</td>
+                    <td>{{item.xm}}</td>
+                    <td>{{item.dh}}</td>
+                </tr>
+            </table>
+            <table class="cms-zqb-table">
+                <tr>
+                    <td>席位</td>
+                    <td>姓名</td>
+                    <td>电话</td>
+                </tr>
+                <tr v-for="(item, index) in rtables" :key="index">
+                    <td>{{item.xw}}</td>
+                    <td>{{item.xm}}</td>
+                    <td>{{item.dh}}</td>
+                </tr>
+            </table>
         </div>
-    </div>   
-    <div class="cms-panel-content">
-        <br class="cfx"/>
-        <table class="cms-zqb-table">
-            <tr>
-                <td>席位</td>
-                <td>姓名</td>
-                <td>电话</td>
-            </tr>
-            <tr v-for="(item, index) in tables" :key="index">
-                <td>{{item.xw}}</td>
-                <td>{{item.xm}}</td>
-                <td>{{item.dh}}</td>
-            </tr>
-        </table>
     </div>
-</div>    
 </template>
 <script>
+
 import { getContents, getDepts } from '@/api/cms'
+
 export default {
     props: {
         cid: {
             type: String,
             default: '-1'
         },
-        count: {
-            type: Number,
-            default: 3
+        hei: {
+            type: String,
+            default: '200'
+        },
+        lydw: {
+            type: String,
+            default: '-1'
         }
     },
     data(){
         return {
-            data: [],
-            zqbtable: {},
-            tables: []
+            ltables: [],
+            rtables: []
         }
     },
     methods: {
         setDeptTable(deptId){
-            if(!this.zqbtable['m_' + deptId]){
-                getContents({cid: this.cid, iszqb: true, lydw: deptId, pagesize: 1}).then(res => {
-                    if(res.data.length > 0){
-                        let d = res.data[0]
-                        let tables = d.sftt != '' ? JSON.parse(d.sftt) : []
-                        let fts = []
-                        if(tables.length > this.count){
-                            for(let i=0;i<this.count;i++){
-                                fts.push(tables[i])
-                            }
+            getContents({cid: this.cid, iszqb: true, lydw: deptId, pagesize: 1}).then(res => {
+                if(res.data.length > 0){
+                    let d = res.data[0]
+                    let tables = d.sftt != '' ? JSON.parse(d.sftt) : []
+
+                    for(let i=0;i<4;i++){
+                        if(i < tables.length){
+                            this.ltables.push(tables[i])
                         }
-                        this.zqbtable['m_' + deptId] = fts
-                    }else{
-                        this.zqbtable['m_' + deptId] = []
                     }
-                    //////////
-                    this.tables = this.zqbtable['m_' + deptId]
-                })
-            }else{
-                //////////
-                this.tables = this.zqbtable['m_' + deptId]
-            }
+                    for(let i=4;i<8;i++){
+                        if(i < tables.length){
+                            this.rtables.push(tables[i])
+                        }
+                    }
+
+                }
+            })
         },
         changeDept(ix){
             let deptId = ix.target.value
@@ -82,11 +89,7 @@ export default {
         }
     },
     mounted(){
-        getDepts({}).then(res => {
-            this.data = res.data
-            this.setDeptTable(res.data[0].id)
-        })
-        // 
+        this.setDeptTable(this.lydw)
     }
 }
 </script>
@@ -94,6 +97,7 @@ export default {
 .cfx{clear:both;}
 .cms-zqb-table{
     width:100%;margin-top:4px;clear:both;
+    flex:1;margin:15px 15px 0 0;
     td{
         height:41px;text-align:center;
         color:#fff;font-weight:bold;font-size:14px;
@@ -123,6 +127,10 @@ export default {
 }
 .cms-panel{
     padding:0 0 0 10px;
+}
+.cms-panel-content{
+    display:flex;
+    justify-content:space-between;
 }
 .cms-panel-title{
     position:relative;

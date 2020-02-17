@@ -115,8 +115,13 @@ export const constantRoutes = [
       },
       {
         path: 'searchpt',
-        name: '搜索',
+        name: '普通搜索',
         component: () => import('@/views/project/cms/searchpt')
+      },
+      {
+        path: 'gw',
+        name: '官网',
+        component: () => import('@/views/project/cms/gw')
       }
     ],
     hidden: true

@@ -27,6 +27,7 @@
 var txtli = () => import('@/views/components/cms/search/txtli')
 
 import { getSearchs } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 
 export default {
     components: {
@@ -54,12 +55,7 @@ export default {
             getSearchs(this.params).then(res => {
                 let arr = []
                 for(let c of res.data){
-                    let tmp = {
-                        id: c.id, title: c.title,
-                        time: this.$moment(c.publishDate).format("YYYY-MM-DD"),
-                        clicks: c.clicks,
-                        source: c.lydwmc
-                    }
+                    let tmp = new NewsModel(c)
                     arr.push(tmp)
                 }
                 this.datas = arr

@@ -1,7 +1,9 @@
 <template>
 <div>
     <div class="tls">
-        <a class="title" @click="groute(dat)">{{dat.title}}</a>
+        <router-link :to="dat.link" v-if="dat.link">
+            <a class="title" >{{dat.title}}</a>
+        </router-link>
     </div>
     <div class="tls-infor">
         <span class="time">{{dat.time}}</span>
@@ -19,9 +21,6 @@ export default {
         }
     },
     methods: {
-        groute(item){
-            this.$router.push({ path: 'detail', query: { id: item.id }});
-        }
     }
 }
 </script>
@@ -34,6 +33,7 @@ export default {
     }
     .title{
         font-size:14px;color:#333;margin-left:1px;
+        display:block;height:35px;overflow:hidden;
         &:hover{
             text-decoration:underline;
         }

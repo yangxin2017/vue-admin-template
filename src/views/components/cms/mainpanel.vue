@@ -1,20 +1,25 @@
 <template>
-    <div class="cms-panel">
-        <div class="cms-panel-title">
+    <div class="cms-panel" :style="{height: hei + 'px'}">
+        <div class="cms-panel-title" ref="titledom">
             <span class="spe-title-font title">{{datas.title}}</span>
-            <ul class="menus">
-                <li :class="index==curIndex ? 'sel' : ''" v-for="(item, index) in datas.children" :key="index">
-                    <a @click="curIndex=index">{{item.title}}</a>
-                </li>
-            </ul>
+            <div class="menu-con">
+                <img :class="{revers: scrollDir=='left'}" @click="scrollContent" v-if="showScrollBtn" class="next" src="../../../assets/cms/content/next.png" alt="" />
+                <div ref="wrapperdom" class="wrapper" :style="{width: wrapperwidth + 'px'}">
+                    <ul class="menus" v-if="datas.children.length > 1">
+                        <li :class="index==curIndex ? 'sel' : ''" v-for="(item, index) in datas.children" :key="index">
+                            <a @click="curIndex=index">{{item.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>   
         <div class="cms-panel-content" :class="dir=='right' ? 'rg-dir' : ''">
             <div class="bg-color">
-                <div class="bg-color-top"></div>
+                <div class="bg-color-top"><div class="bd"></div></div>
                 <div class="bg-color-mid"></div>
-                <div class="bg-color-bottom"></div>
+                <div class="bg-color-bottom"><div class="bd"></div></div>
             </div>
-            <div class="inner" :style="{height: hei + 'px'}">
+            <div class="inner" style="height:100%">
                 <span class="it-1"></span>
                 <span class="it-1 it1-2"></span>
                 <div class="rg-in">
@@ -25,18 +30,19 @@
                         <span class="it-3-2"></span>
                     </span>
                 </div>
-                <div v-if="spec == null" style="height:100%">
+                <div class="com-container" v-if="spec == null" style="height:100%;">
                     <div v-for="(item,index) in datas.children" :key="index" style="height:100%;" :class="{'cms-hide': index!=curIndex}">
-                        <text-one v-if="item.type=='text'" :count="item.count" :cid="item.id" />
-                        <text-two v-if="item.type=='text2'" :count="item.count" :cid="item.id" />
-                        <pic-txt v-if="item.type=='pic'" :count="item.count" :cid="item.id" />
+                        <text-one v-if="item.type=='text'" :isgw="isgw" :count="item.count" :cid="item.id" :lydw="lydw" />
+                        <text-two v-if="item.type=='text2'" :count="item.count" :cid="item.id" :isgw="isgw" :lydw="lydw" />
+                        <pic-txt v-if="item.type=='pic'" :count="item.count" :cid="item.id" :isgw="isgw" :lydw="lydw" />
                         <videos v-if="item.type=='video'" :count="item.count" :cid="item.id" />
-                        <sys v-if="item.type=='sys'" :count="item.count" :cid="item.id" />
+                        <sys v-if="item.type=='sys'" :percount="percount" :count="item.count" :cid="item.id" />
                         <text-detail v-if="item.type=='detail'" :count="item.count" :cid="item.id" />
+                        
                     </div>
                 </div>
                 <div v-else>
-                    <rank v-if="spec=='rank'" />
+                    <rank v-if="spec=='rank'" :count="count" />
                 </div>
                 
             </div>
@@ -85,21 +91,87 @@ export default {
         },
         hei: {
             type: String,
-            default: '164'
+            default: '212'
         },
         spec: {
             type: String,
             default: null
+        },
+        count: {
+            type: Number,
+            default: 3
+        },
+        percount: {
+            type: Number,
+            default: 5
+        },
+        isgw: {
+            type: String,
+            default: 'false'
+        },
+        lydw: {
+            type: String,
+            default: "-1"
         }
     },
     methods: {
-
+        initScroll(){
+            setTimeout(()=>{
+                let w = this.$refs.titledom.clientWidth
+                let w0 = this.$refs.titledom.children[0].clientWidth
+                this.wrapperwidth = w - w0 - 70
+                /////
+                let w1 = this.$refs.wrapperdom.offsetWidth
+                if(this.$refs.wrapperdom.children.length > 0){
+                    let childs = this.$refs.wrapperdom.children[0].children
+                    let w2 = 0
+                    for(let c of childs){
+                        w2 += c.clientWidth
+                    }
+                    
+                    if(w1 < w2){
+                        this.showScrollBtn = true
+                        this.wlwidth = w2 - w1
+                    }else{
+                        this.showScrollBtn = false
+                    }
+                }
+            }, 500)
+        },
+        scrollContent(){
+            if(this.scrollDir == 'right'){
+                this.scrollDir = 'left'
+                let wl = 0;
+                let inter = setInterval(() => {
+                    wl += 3
+                    this.$refs.wrapperdom.scrollLeft = wl
+                    if(wl > this.wlwidth){
+                        clearInterval(inter)
+                    }
+                }, 1)
+            }else{
+                this.scrollDir = 'right'
+                let wl = this.wlwidth
+                let inter = setInterval(() => {
+                    wl -= 3
+                    this.$refs.wrapperdom.scrollLeft = wl
+                    if(wl < 0){
+                        clearInterval(inter)
+                    }
+                }, 1)
+            }
+        }
     },
     mounted(){
         if(this.spec == null) {
             getCategorys({parentId: this.cid}).then(res => {
                 if(this.pkey){
-                    let chs  = this.$store.state.app.cms[this.pkey].children
+                    let chs  = []
+                    if(this.isgw == 'true'){
+                        chs = this.$store.state.app.cms_gw[this.pkey].children
+                    }else{
+                        chs = this.$store.state.app.cms[this.pkey].children
+                    }
 
                     for(let d of res.data){
                         if(chs['m_' + d.id]){
@@ -116,7 +188,7 @@ export default {
                         }
                     }
                 }
-                
+                this.initScroll()
             })
         }
         
@@ -129,7 +201,11 @@ export default {
                 title: '综合研究',
                 children: [
                 ]
-            }
+            },
+            wrapperwidth: 200,
+            showScrollBtn: false,
+            scrollDir: 'right',
+            wlwidth: 500
         }
     }
 }
@@ -140,16 +216,22 @@ export default {
 }
 .cms-panel-title{
     background:url('../../../assets/cms/content/icons.png') no-repeat -9px -11px;
-    width:100%;height:26px;
+    width:100%;height:26px;display:flex;
     .title{
         font-size:22px;font-weight:bold;
         padding-left:20px;font-style:italic;
-        float:left;
+        float:left;white-space: nowrap;margin-right:5px;
+    }
+    .menu-con{
+        float:left;flex:1;
+    }
+    .wrapper{
+        overflow:hidden;width:calc(100% - 50px);
     }
     .menus{
-        float:left;list-style:none;margin:8px 0 0 0;padding:0 0 0 15px;
+        list-style:none;margin:0px 0 0 0;padding:6px 0 0 15px;white-space:nowrap;
         li{
-            float:left;margin:0 13px 0 0;
+            margin:0 13px 0 0;display:inline-block;
             a{
                 font-size:16px;
                 color:#fff;font-style: italic;
@@ -160,17 +242,29 @@ export default {
             }
         }
     }
+    .next{
+        cursor:pointer;
+        float:right;margin-top:6px;margin-right:20px;
+        &.revers{
+            transform:rotate(180deg);
+        }
+    }
 }
 .cms-panel-content{
     padding:10px 25px 10px 10px;position: relative;
+    height:calc(100% - 25px);
 
     .bg-color{
-        width:100%;height:calc(100% - 22px);
-        position:absolute;top:11px;right:5px;
+        width:calc(100% - 14px);height:calc(100% - 22px);
+        position:absolute;top:11px;right:6px;
         .bg-color-top{
             position:absolute;left:0;top:0;
             background:url('../../../assets/cms/content/panel_bg.png') no-repeat right 0;
             width:100%;height:30px;
+            .bd{
+                background:rgba(0,0,0,0.4);
+                position:absolute;top:0px;width:calc(100% - 666px);height:30px;left:0%;
+            }
         }
         .bg-color-mid{
             background:rgba(0,0,0,0.4);
@@ -180,6 +274,10 @@ export default {
             position:absolute;left:0;bottom:0;
             background:url('../../../assets/cms/content/panel_bg.png') no-repeat right -132px;
             width:100%;height:30px;
+            .bd{
+                background:rgba(0,0,0,0.4);
+                position:absolute;top:0px;width:calc(100% - 666px);height:30px;left:0%;
+            }
         }
     }
 
@@ -234,7 +332,7 @@ export default {
             }
         }
         .bg-color{
-            right:-4px;
+            right:8px;
             .bg-color-top{
                 transform:rotateY(180deg);
             }

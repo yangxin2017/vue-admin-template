@@ -3,7 +3,7 @@
         <comrender :html="head" />
         <div class="cms-s-con">
             <div class="cms-s-left">
-                <search-ptone @searchContent="searchList($event)"></search-ptone>
+                <search-ptone ref="rsearchmod" @searchContent="searchList($event)"></search-ptone>
                 <div class="tabs" v-if="viewtype">
                     <ul>
                         <li @click="changetype('text')" :class="{sel: viewtype=='text'}">网页</li>
@@ -57,10 +57,15 @@ export default {
         settagids(ids){
             
         },
-        showtimelinedata(id){
+        showtimelinedata(resd){
+            if(resd.clicked) {
+                this.viewtype = 'event'
+                // show eventname lists...
+                this.$refs.rlists.setWord(resd.name)
+            }
             this.showevent = true
-            this.viewtype = 'event'
-            this.$refs.rtimelists.initContent(id)
+            console.log('set tag list content')
+            this.$refs.rtimelists.initContent(resd.id)
         },
         showdeptdata(id){
             this.showdept = true
@@ -89,7 +94,7 @@ export default {
 <style lang="scss" scoped>
 .cms-bg{
     background:#010E04;
-    width:2560px;height:1080px;
+    width:100%;height:100%;
     background-size:100% 100%;
     .cms-s-con{
         width:95%;height:calc(100% - 95px);margin:10px auto;display:flex;
