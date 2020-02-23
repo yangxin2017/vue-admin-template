@@ -89,6 +89,12 @@ export const constantRoutes = [
         name: '页面列表',
         component: () => import('@/views/page/list/index'),
         meta: { title: 'Page list', icon: 'tree' }
+      },
+      {
+        path: 'addpage',
+        name: '添加页面',
+        component: () => import('@/views/page/addpage/index'),
+        meta: { title: 'add page', icon: 'tree' }
       }
     ]
   },
