@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 import Cookies from 'js-cookie'
+import { getToken, getUserId } from '@/utils/auth' // get token from cookie
 
 function initUserToken(){
     let obj = {
-        authToken: '2d3ed867-f94f-4d02-ad0f-7a9c6fa8ddd7', //Cookies.get('token'),
-        authUserId: 5, //Cookies.get("userid")
+        authToken: getToken(), //Cookies.get('token'),
+        authUserId: getUserId(), //Cookies.get("userid")
     };
     return obj;
 }

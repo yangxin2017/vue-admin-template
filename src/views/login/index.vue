@@ -54,28 +54,31 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { login } from '@/api/cms'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
+      // if (!validUsername(value)) {
+      //   callback(new Error('Please enter the correct user name'))
+      // } else {
+      //   callback()
+      // }
+      callback()
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
+      // if (value.length < 6) {
+      //   callback(new Error('The password can not be less than 6 digits'))
+      // } else {
+      //   callback()
+      // }
+      callback()
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -112,7 +115,7 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
-          }).catch(() => {
+          }).catch((err) => {
             this.loading = false
           })
         } else {

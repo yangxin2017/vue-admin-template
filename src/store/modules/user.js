@@ -1,10 +1,11 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getDepts } from '@/api/cms'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, getUserId, setUserId } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
+    userId: getUserId(),
     token: getToken(),
     name: '',
     avatar: ''
@@ -20,12 +21,15 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
+  SET_USERID: (state, userId) => {
+    state.userId = userId
+  },
   SET_NAME: (state, name) => {
     state.name = name
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
-  }
+  },
 }
 
 const actions = {
@@ -34,9 +38,12 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        let data = response
+        commit('SET_TOKEN', data.authToken)
+        commit('SET_USERID', data.data.id)
+        commit('SET_NAME', data.data.nickName)
+        setToken(data.authToken)
+        setUserId(data.data.id)
         resolve()
       }).catch(error => {
         reject(error)
@@ -47,7 +54,11 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      let params = {
+        authToken: state.token, 
+        authUserId: state.userId
+      }
+      getInfo(params).then(response => {
         const { data } = response
 
         if (!data) {
@@ -57,7 +68,7 @@ const actions = {
         const { name, avatar } = data
 
         commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        // commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {
         reject(error)

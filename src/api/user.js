@@ -1,18 +1,19 @@
 import request from '@/utils/request'
 
-export function login(data) {
+export function login(params) {
   return request({
-    url: '/user/login',
+    // url: '/user/login',
+    url: '/cms/api/login',
     method: 'post',
-    data
+    params
   })
 }
 
-export function getInfo(token) {
+export function getInfo(params) {
   return request({
-    url: '/user/info',
+    url: '/cms/api/userinfo',
     method: 'get',
-    params: { token }
+    params
   })
 }
 

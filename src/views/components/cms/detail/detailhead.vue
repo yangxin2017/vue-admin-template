@@ -12,7 +12,7 @@
                 </router-link>
             </div>
             <div class="cms-fl right">
-                <span class="cms-hd-title">Admin</span>
+                <span class="cms-hd-title">{{ name }}</span>
                 <span class="cms-hd-icons i1"></span>
                 <span class="cms-hd-icons i2"></span>
                 <span class="cms-hd-icons i3"></span>
@@ -21,6 +21,8 @@
     </div>
 </template>
 <script>
+
+import { mapGetters } from 'vuex'
 
 export default {
     props: {
@@ -42,6 +44,11 @@ export default {
         }
     },
     mounted(){
+    },
+    computed: {
+        ...mapGetters([
+            'name'
+        ])
     }
 }
 </script>

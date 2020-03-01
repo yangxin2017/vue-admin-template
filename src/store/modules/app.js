@@ -13,7 +13,8 @@ const state = {
       dir: 'left',
       children: {
           'm_146': { type: 'text', count: 4 },
-          'm_147': { type: 'pic', count: 4 }
+          'm_147': { type: 'pic', count: 4 },
+          'm_181': { type: 'text', count: 4 }
       }
     },
     l2: {
@@ -132,7 +133,8 @@ const state = {
       dir: 'left',
       children: {
           'm_146': { type: 'text', count: 4 },
-          'm_147': { type: 'pic', count: 4 }
+          'm_147': { type: 'pic', count: 4 },
+          'm_181': { type: 'text', count: 4 }
       }
     },
     l2: {
@@ -244,7 +246,8 @@ const state = {
       dir: 'left',
       children: {
           'm_146': { type: 'text2', count: 3 },
-          'm_147': { type: 'pic', count: 3 }
+          'm_147': { type: 'pic', count: 3 },
+          'm_181': { type: 'text2', count: 3 }
       }
     },
     l2: {
@@ -358,7 +361,8 @@ const state = {
       height: 550,
       children: {
           'm_146': { type: 'text', count: 12 },
-          'm_147': { type: 'pic', count: 12 }
+          'm_147': { type: 'pic', count: 12 },
+          'm_181': { type: 'text', count: 12 }
       }
     },
     l2: {
@@ -438,7 +442,8 @@ const state = {
       height: 730,
       children: {
           'm_146': { type: 'text', count: 16 },
-          'm_147': { type: 'pic', count: 20 }
+          'm_147': { type: 'pic', count: 20 },
+          'm_181': { type: 'text', count: 16 }
       }
     },
     l2: {
@@ -518,7 +523,8 @@ const state = {
       height: 570,
       children: {
           'm_146': { type: 'text2', count: 10 },
-          'm_147': { type: 'pic', count: 9 }
+          'm_147': { type: 'pic', count: 9 },
+          'm_181': { type: 'text2', count: 10 }
       }
     },
     l2: {

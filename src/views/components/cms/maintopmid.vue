@@ -125,6 +125,8 @@ export default {
                     dd.lists = arr
                     this.lists = arr
                 })
+            }else{
+                this.lists = dd.lists
             }
         },
         async getBHS(){

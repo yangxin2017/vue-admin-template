@@ -129,6 +129,7 @@ export default {
                         w2 += c.clientWidth
                     }
                     
+                    w2 = w2 - 18
                     if(w1 < w2){
                         this.showScrollBtn = true
                         this.wlwidth = w2 - w1
@@ -136,7 +137,7 @@ export default {
                         this.showScrollBtn = false
                     }
                 }
-            }, 500)
+            }, 1000)
         },
         scrollContent(){
             if(this.scrollDir == 'right'){
