@@ -2,7 +2,7 @@
     <div class="layer-analysis">
         <div class="an-layer">
             <div class="anlayer-title">
-                <span>标题名称</span>
+                <span>信息统计</span>
                 <img src="../../../assets/cms/content/statics/anlayer_close.png" @click="$emit('hide')" class="close-dialog">
             </div>
             <div class="anlayer-num">
@@ -67,7 +67,7 @@
                     <div class="layer-leftB">
                         <div class="anylayer-title">
                             <span class="left-titname">
-                                更新量统计
+                                更新统计
                             </span>
                             <div class="anylayer-select">
                                 <span class="span-select-nor" style="top:-17px;">

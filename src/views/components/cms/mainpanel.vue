@@ -119,17 +119,17 @@ export default {
             setTimeout(()=>{
                 let w = this.$refs.titledom.clientWidth
                 let w0 = this.$refs.titledom.children[0].clientWidth
-                this.wrapperwidth = w - w0 - 70
+                this.wrapperwidth = w - w0 - 60
                 /////
-                let w1 = this.$refs.wrapperdom.offsetWidth
+                let w1 = this.wrapperwidth // this.$refs.wrapperdom.offsetWidth
+                // console.log(w1)
                 if(this.$refs.wrapperdom.children.length > 0){
                     let childs = this.$refs.wrapperdom.children[0].children
                     let w2 = 0
                     for(let c of childs){
-                        w2 += c.clientWidth
+                        w2 += c.clientWidth + 18
                     }
                     
-                    w2 = w2 - 18
                     if(w1 < w2){
                         this.showScrollBtn = true
                         this.wlwidth = w2 - w1

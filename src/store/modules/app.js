@@ -47,7 +47,9 @@ const state = {
       dir: 'left',
       children: {
           'm_179': { type: 'detail', count: 1 },
-          'm_180': { type: 'text', count: 6 }
+          'm_180': { type: 'text', count: 6 },
+          'm_182': { type: 'text', count: 6 },
+          'm_183': { type: 'text', count: 6 }
       }
     },
     b1: {
@@ -164,7 +166,9 @@ const state = {
       dir: 'left',
       children: {
           'm_179': { type: 'detail', count: 1 },
-          'm_180': { type: 'text', count: 4 }
+          'm_180': { type: 'text', count: 4 },
+          'm_182': { type: 'text', count: 4 },
+          'm_183': { type: 'text', count: 4 }
       }
     },
     b1: {
@@ -277,7 +281,9 @@ const state = {
       dir: 'left',
       children: {
           'm_179': { type: 'detail', count: 1 },
-          'm_180': { type: 'text2', count: 3 }
+          'm_180': { type: 'text2', count: 3 },
+          'm_182': { type: 'text', count: 3 },
+          'm_183': { type: 'text', count: 3 }
       }
     },
     b1: {

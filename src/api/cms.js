@@ -23,7 +23,7 @@ export async function getContents(params){
   params = Object.assign(obj, params);
 
   return request({
-    url: 'cms/api/contents',
+    url: '/cms/api/contents',
     method: 'get',
     params
   })
