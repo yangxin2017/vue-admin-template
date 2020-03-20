@@ -75,6 +75,7 @@
 <script>
 import comrender from '@/views/components/render'
 import { getCategorys, login } from '@/api/cms';
+import { getCategoryByCode } from '@/utils/cms'
 
 export default {
     components: {
@@ -115,29 +116,42 @@ export default {
         }
     },
     mounted(){
+        let allCategorys = this.$store.state.cms.categorys
+
         let relative = this.$store.state.app.cms
         
         this.midwidth = relative.other.meta.midwidth
+        ///
+        let t1Cate = {}
 
-        getCategorys({}).then(res => {
-            for(let k in relative){
-                if(k != 'other') {
-                    let d = this.getCategoryById(res.data, relative[k].id)
+        //getCategorys({}).then(res => {
+        for(let k in relative){
+            if(k != 'other') {
+                let d = getCategoryByCode(allCategorys, relative[k].code)
+                if(d){
                     let hstr = relative[k].height ? `hei=${relative[k].height}` : ''
                     let pstr = relative[k].percount ? `:percount=${relative[k].percount}` : ''
 
-                    this[k] = `<main-panel dir="${relative[k].dir}" ${hstr} ${pstr} pkey="${k}" cid="${relative[k].id}" cname="${d.name}"></main-panel>`
-                }else{
-                    let d = this.getCategoryById(res.data, relative.other.zydx.id)
-                    this.t2 = `<main-top-mid hei="${relative.other.zydx.height}" cname="${d.name}" cid="${d.id}"></main-top-mid>`
+                    this[k] = `<main-panel dir="${relative[k].dir}" ${hstr} ${pstr} pkey="${k}" cid="${d.id}" cname="${d.name}"></main-panel>`
                 }
+                
+            }else{
+                let d = getCategoryByCode(allCategorys, relative.other.zydx.code)
+                this.t2 = `<main-top-mid hei="${relative.other.zydx.height}" cname="${d.name}" cid="${d.id}"></main-top-mid>`
             }
-        });
+        }
+        
+        //t1Cate = getCategoryByCode(allCategorys, relative['other'].ncpd.pcode)
+        //this.t1 = `<main-top title="${t1Cate.name}" hei="${relative['other'].ncpd.height}" :count="${relative['other'].ncpd.count}" cid="${t1Cate.id}"></main-top>`
+        //});
         let obj = relative['other'];
-        this.t1 = `<main-top hei="${obj.lbt.height}" lbtid="${obj.lbt.id}" zqbid="${obj.zqb.id}"></main-top>`
-        this.r4 = `<main-panel :count="${obj.ranks.count}" type="rank" dir="right" hei="180" spec="rank" cname="排行榜"></main-panel>`
-        this.r5 = `<main-contact :count="${obj.contact.count}"></main-contact>`
 
+        
+        this.r4 = `<main-panel :count="${obj.ranks.count}" type="rank" dir="right" hei="180" spec="rank" cname="排行榜"></main-panel>`
+        // this.r5 = `<main-contact :count="${obj.contact.count}"></main-contact>`
+        let r5cate = getCategoryByCode(allCategorys, obj.zqb.pcode)
+        this.r5 = `<main-zqb :cid="${r5cate.id}" :hei="${obj.zqb.height}" :count="${obj.zqb.count}"></main-zqb>`
+        
 
         /////
         // login({username: 'f1', password: '123456'});

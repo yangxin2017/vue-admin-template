@@ -9,6 +9,7 @@ var maintopmid = () => import('@/views/components/cms/maintopmid')
 var maincontact = () => import('@/views/components/cms/maincontact')
 var mainfooter = () => import('@/views/components/cms/normal/footer')
 var mainstas = () => import('@/views/components/cms/mainstatics')
+var mainzqb = () => import('@/views/components/cms/mainzqb')
 //
 var detailhead = () => import('@/views/components/cms/detail/detailhead')
 //
@@ -37,6 +38,7 @@ export default {
         'main-contact': maincontact,
         'main-footer': mainfooter,
         'main-statics': mainstas,
+        'main-zqb': mainzqb,
         //
         'detail-head': detailhead,
         //

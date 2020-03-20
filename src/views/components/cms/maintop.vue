@@ -1,34 +1,58 @@
 <template>
     <div class="cms-top" :style="{height: hei + 'px'}">
         <div class="lbt">
-            <lbt :cid="lbtid"></lbt>
+            <video controls="controls" :src="first.video"></video>
         </div>
         <div class="zqb">
-            <zqb :cid="zqbid"></zqb>
+            <ncpd :data="data" :title="title"></ncpd>
         </div>
     </div>
 </template>
 <script>
-var lbt = () => import('@/views/components/cms/normal/lbt')
-var zqb = () => import('@/views/components/cms/normal/zqb')
+var ncpd = () => import('@/views/components/cms/normal/ncpd')
+import { getContents } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
+
 export default {
     components: {
-        'lbt': lbt,
-        'zqb': zqb
+        'ncpd': ncpd
     },
     props: {
-        lbtid: {
-            type: String,
-            default: null
-        },
-        zqbid: {
+        cid: {
             type: String,
             default: null
         },
         hei: {
             type: String,
             default: '280'
+        },
+        count: {
+            type: Number,
+            default: 6
+        },
+        title: {
+            type: String,
+            default: ''
         }
+    },
+    data(){
+        return {
+            first: {},
+            data: []
+        }
+    },
+    mounted(){
+        getContents({cid: this.cid, pagesize: this.count}).then(res => {
+            if(res.data.length > 0){
+                let c = res.data[0];
+                let tmp = new NewsModel(c)
+                this.first = tmp
+                for(let i=1;i<res.data.length;i++){
+                    let tmp = new NewsModel(res.data[i])
+                    this.data.push(tmp)
+                }
+            }
+        })
     }
 }
 </script>
@@ -40,6 +64,10 @@ export default {
         flex: 4;margin:20px 20px 0 40px;
         height:calc(100% - 15px);padding:5px;border:solid 1px rgba(255,255,255,0.3);
         border-radius:0 5px 0 5px;
+        video{
+            object-fit: fill;
+            width:100%;height:100%;
+        }
     }
     .zqb{flex: 5;height:calc(100% - 15px);margin:20px 0px 0 0px;}
 }

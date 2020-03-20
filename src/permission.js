@@ -33,6 +33,8 @@ router.beforeEach(async(to, from, next) => {
         try {
           // get user info
           await store.dispatch('user/getInfo')
+          console.log('init global info.....')
+          await store.dispatch('cms/getAllCates')
 
           next()
         } catch (error) {

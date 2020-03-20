@@ -246,105 +246,112 @@ const state = {
   },
   cms: {
     l1: {
-      id: 128,
+      code: 'MBQB',
       dir: 'left',
       children: {
-          'm_146': { type: 'text2', count: 3 },
-          'm_147': { type: 'pic', count: 3 },
-          'm_181': { type: 'text2', count: 3 }
+          'm_MBQBYJ': { type: 'text2', count: 3 },
+          'm_YTGL': { type: 'pic', count: 3 },
+          'm_SWMX': { type: 'text2', count: 3 }
       }
     },
     l2: {
-      id: 127,
+      code: 'ZHYJ',
       dir: 'left',
       children: {
-          'm_141': { type: 'text2', count: 3 },
-          'm_142': { type: 'text2', count: 3 },
-          'm_143': { type: 'text2', count: 3 },
-          'm_144': { type: 'text2', count: 3 },
-          'm_145': { type: 'text2', count: 3 }
+          'm_ZLXS': { type: 'text2', count: 3 },
+          'm_ZCYJ': { type: 'text2', count: 3 },
+          'm_WJJS': { type: 'text2', count: 3 },
+          'm_KJZB': { type: 'text2', count: 3 },
+          'm_XXLY': { type: 'text2', count: 3 }
       }
     },
     l3: {
-      id: 121,
+      code: 'KYQB',
       dir: 'left',
       children: {
-          'm_123': { type: 'text2', count: 3 },
-          'm_154': { type: 'text2', count: 3 },
-          'm_155': { type: 'text2', count: 3 },
-          'm_156': { type: 'text2', count: 3 },
-          'm_162': { type: 'text2', count: 3 }
+          'm_JQYC': { type: 'text2', count: 3 },
+          'm_SXZTP': { type: 'text2', count: 3 },
+          'm_ZKBB': { type: 'text2', count: 3 },
+          'm_KYTS': { type: 'text2', count: 3 },
+          'm_TSZL': { type: 'text2', count: 3 }
       }
     },
     l4: {
-      id: 178,
+      code: 'ZLXHQKFY',
       dir: 'left',
       children: {
-          'm_179': { type: 'detail', count: 1 },
-          'm_180': { type: 'text2', count: 3 },
-          'm_182': { type: 'text', count: 3 },
-          'm_183': { type: 'text', count: 3 }
+          'm_ZLXH': { type: 'detail', count: 1 },
+          'm_ZLXHHH': { type: 'text2', count: 3 },
+          'm_ZLYJ': { type: 'text', count: 3 },
+          'm_WFJWJG': { type: 'text', count: 3 }
       }
     },
     b1: {
-      id: 158,
+      code: 'QBWH',
       dir: 'left',
       children: {
-        'm_159': { type: 'text2', count: 3 },
-        'm_160': { type: 'text2', count: 3 },
-        'm_161': { type: 'text2', count: 3 }
+        'm_XBYL': { type: 'text2', count: 3 },
+        'm_LSYG': { type: 'text2', count: 3 },
+        'm_DDFC': { type: 'text2', count: 3 }
       }
     },
     b2: {
-      id: 163,
+      code: 'ZCFG',
       dir: 'left',
       children: {
-        'm_167': { type: 'text2', count: 3 }
+        'm_NZCFG': { type: 'text2', count: 3 }
       }
     },
     r1: {
-      id: 126,
+      code: 'ZCTS',
       dir: 'right',
       children: {
-        'm_132': { type: 'video', count: 1 },
-        'm_133': { type: 'text2', count: 3 },
-        'm_134': { type: 'text2', count: 3 },
-        'm_139': { type: 'text2', count: 3 },
-        'm_140': { type: 'text2', count: 3 }
+        'm_ZCZTP': { type: 'video', count: 1 },
+        'm_ZCYQTS': { type: 'text2', count: 3 },
+        'm_QKBG': { type: 'text2', count: 3 },
+        'm_TSYT': { type: 'text2', count: 3 },
+        'm_TSPG': { type: 'text2', count: 3 }
       }
     },
     r2: {
-      id: 129,
+      code: 'JCDQ',
       dir: 'right',
       children: {
-        'm_149': { type: 'text2', count: 3 },
-        'm_150': { type: 'text2', count: 3 },
-        'm_151': { type: 'text2', count: 3 }
-      }
+        'm_WTJQ': { type: 'text2', count: 2 },
+        'm_WTJZF': { type: 'text2', count: 2 },
+        'm_ZZTL': { type: 'text2', count: 2 }
+      },
+      height: 154
     },
     r3: {
-      id: 164,
+      code: 'QBXT',
       dir: 'right',
       height: 165,
       percount: 3,
       children: {
-        'm_168': { type: 'sys', count: 30 }
+        'm_QJLHZZZCTSXT': { type: 'sys', count: 30 }
       }
     },
     other: {
-      lbt: { id: 175, height: 220 },
-      zqb: { id: 177 },
+      // lbt: { id: 175, height: 220 },TODO
+      ncpd: { id: 191, height: 220, count: 5, pid: 190, code: '', pcode: '' },
+      zqb: { 
+        code: 'ZQB',
+        pcode: 'ZQBP',
+        height: 136,
+        count:2
+      },
       ranks: { count: 2 },
       contact: { count: 3 },
       zydx: {
-        id: 120,
+        code: 'ZYDX',
         height: 330,
         children: {
-          'm_122': { type: 'guo', count: 4 },
-          'm_130': { type: 'hai', count: 4 },
-          'm_131': { type: 'guo', count: 4 },
-          'm_165': { type: 'hai', count: 4 },
-          'm_166': { type: 'guo', count: 4 }
+          'm_ZLDX': { type: 'guo', count: 4 },
+          'm_ZCDX': { type: 'hai', count: 4 },
+          'm_FKWW': { type: 'guo', count: 4 },
+          'm_ZBWT': { type: 'hai', count: 4 },
+          'm_RDWT': { type: 'guo', count: 4 }
         }
       },
       meta: {

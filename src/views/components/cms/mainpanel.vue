@@ -60,6 +60,7 @@ var textdetail = () => import('@/views/components/cms/normal/textdetail')
 
 
 import { getCategorys } from '@/api/cms'
+import { getCategoryChildsById } from '@/utils/cms'
 
 export default {
     components: {
@@ -164,8 +165,12 @@ export default {
         }
     },
     mounted(){
+        // console.log(this.$store.state.cms);
+        let allCategorys = this.$store.state.cms.categorys
+
         if(this.spec == null) {
-            getCategorys({parentId: this.cid}).then(res => {
+            let cates = getCategoryChildsById(allCategorys, this.cid)
+            //getCategorys({parentId: this.cid}).then(res => {
                 if(this.pkey){
                     let chs  = []
                     if(this.isgw == 'true'){
@@ -174,10 +179,10 @@ export default {
                         chs = this.$store.state.app.cms[this.pkey].children
                     }
 
-                    for(let d of res.data){
-                        if(chs['m_' + d.id]){
-                            d.type = chs['m_' + d.id].type;
-                            d.count = chs['m_' + d.id].count;
+                    for(let d of cates){
+                        if(chs['m_' + d.code]){
+                            d.type = chs['m_' + d.code].type;
+                            d.count = chs['m_' + d.code].count;
                             let tmp = {
                                 title: d.name, 
                                 type: d.type,
@@ -190,7 +195,7 @@ export default {
                     }
                 }
                 this.initScroll()
-            })
+            //})
         }
         
         this.datas.title = this.cname

@@ -42,6 +42,7 @@
 <script>
 import { getContents, getCategorys, getGuoHais } from '@/api/cms'
 import { NewsModel } from '@/model/cms/news'
+import { getCategoryByCode } from '@/utils/cms'
 
 export default {
     props: {
@@ -130,6 +131,9 @@ export default {
             }
         },
         async getBHS(){
+            
+            let allCategorys = this.$store.state.cms.categorys
+
             let gs = await getGuoHais({});
             this.guos = gs.data.guo
             this.hais = gs.data.hai
@@ -137,30 +141,32 @@ export default {
             let relative = this.$store.state.app.cms
             let zydx = relative.other.zydx
             //////////////////////////////
-            getCategorys({parentId: this.cid}).then(res => {
-                let chs  = zydx.children
-                //
-                this.curCid = res.data[0].id
+            let cates = getCategoryByCode(allCategorys, zydx.code).children
+            //getCategorys({parentId: this.cid}).then(res => {
+            let chs = zydx.children
+            //
+            this.curCid = cates[0].id
 
-                for(let d of res.data){
-                    if(chs['m_' + d.id]){
-                        let type = chs['m_' + d.id].type
-                        let tmp = {
-                            title: d.name, 
-                            id: d.id,
-                            type: type,
-                            datas: {}
-                        }
-                        for(let d of gs.data[type]){
-                            tmp.datas[d.id.value] = { text: d.text, lists: [] }
-                        }
-                        
-                        this.datas.children.push(tmp)
+            for(let d of cates){
+                if(chs['m_' + d.code]){
+                    let type = chs['m_' + d.code].type
+                    let tmp = {
+                        title: d.name, 
+                        id: d.id,
+                        type: type,
+                        datas: {}
                     }
+                    for(let d of gs.data[type]){
+                        tmp.datas[d.id.value] = { text: d.text, lists: [] }
+                    }
+                    
+                    this.datas.children.push(tmp)
                 }
-                ///
-                this.setContent()
-            })
+            }
+            console.log(this.datas)
+            ///
+            this.setContent()
+            //})
         }
     },
     mounted(){
