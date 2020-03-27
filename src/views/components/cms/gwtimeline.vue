@@ -140,6 +140,8 @@ export default {
         changeTab(item){
             this.curCid = item.id
             this.curType = item.type
+            ///////
+            this.setContent()
         },
         initCates(){
             let relative = this.$store.state.app.cms_gw

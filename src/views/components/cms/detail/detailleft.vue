@@ -3,7 +3,7 @@
     <div class="cms-d-title">
         <span class="cms-select">
             <select v-model="fcaid" @change="changesel">
-                <option v-for="item in cates" :value="item.id" :key="item.id">{{item.name}}</option>
+                <option v-for="item in cates" v-if="item.show" :value="item.id" :key="item.id">{{item.name}}</option>
             </select>
         </span>
     </div>

@@ -107,10 +107,15 @@ export default {
     mounted(){
         this.pagesize = this.$store.state.app.cms.other.meta.count.searchbottom
 
-        getCategorys({}).then(res => {
-            let tmp = [{name: '全部', id: -1}, ...res.data]
-            this.cates = tmp
-        })
+        let cates = this.$store.state.cms.categorys
+        cates = cates.filter((d)=>{return d.show == true;})
+        let tmp = [{name: '全部', id: -1}, ...cates]
+        this.cates = tmp
+
+        // getCategorys({}).then(res => {
+        //     let tmp = [{name: '全部', id: -1}, ...res.data]
+        //     this.cates = tmp
+        // })
         getWords({pagesize: 10}).then(res => {
             this.hots = res.data
         })

@@ -141,8 +141,10 @@ export default {
             }
         }
         
-        //t1Cate = getCategoryByCode(allCategorys, relative['other'].ncpd.pcode)
-        //this.t1 = `<main-top title="${t1Cate.name}" hei="${relative['other'].ncpd.height}" :count="${relative['other'].ncpd.count}" cid="${t1Cate.id}"></main-top>`
+        t1Cate = getCategoryByCode(allCategorys, relative['other'].ncpd.pcode)
+        let firstNCPD = t1Cate.children[0]
+
+        this.t1 = `<main-top title="${t1Cate.name}" hei="${relative['other'].ncpd.height}" :count="${relative['other'].ncpd.count}" cid="${firstNCPD.id}"></main-top>`
         //});
         let obj = relative['other'];
 
@@ -150,7 +152,8 @@ export default {
         this.r4 = `<main-panel :count="${obj.ranks.count}" type="rank" dir="right" hei="180" spec="rank" cname="排行榜"></main-panel>`
         // this.r5 = `<main-contact :count="${obj.contact.count}"></main-contact>`
         let r5cate = getCategoryByCode(allCategorys, obj.zqb.pcode)
-        this.r5 = `<main-zqb :cid="${r5cate.id}" :hei="${obj.zqb.height}" :count="${obj.zqb.count}"></main-zqb>`
+        let firstZQB = r5cate.children[0]
+        this.r5 = `<main-zqb :cid="${firstZQB.id}" :hei="${obj.zqb.height}" :count="${obj.zqb.count}"></main-zqb>`
         
 
         /////

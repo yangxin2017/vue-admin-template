@@ -14,10 +14,10 @@
         </div>
     </div>   
     <div class="cms-panel-content">
-        <div class="map1" v-if="curType=='hai'">
+        <div ref="mapdom" class="map1" v-if="curType=='hai'">
             <span @click="changeHAI(item.id.value, item.text)" v-for="item in hais" :key="item.id.value" :class="[item.id.value, 'txt', curHai==item.id.value ? 'sel' : '']">{{item.text}}</span>
         </div>
-        <div ref="mapdom" class="map2" v-if="curType=='guo'">
+        <div class="map2" v-if="curType=='guo'">
             <span @click="changeGJ(item.id.value, item.text)" v-for="item in guos" :key="item.id.value" :class="[item.id.value, 'txt', curGj==item.id.value ? 'sel' : '']">{{item.text}}</span>
         </div>
         <div class="map-data">
@@ -69,8 +69,8 @@ export default {
             curCid: -1,
             curGj: 'meiguo',
             curHai: 'bohai',
-            curType: 'guo',
-            showtext: '美国',
+            curType: 'hai',
+            showtext: '渤海方向',
             guos: [],
             hais: [],
             lists: []
@@ -163,7 +163,6 @@ export default {
                     this.datas.children.push(tmp)
                 }
             }
-            console.log(this.datas)
             ///
             this.setContent()
             //})

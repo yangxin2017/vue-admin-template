@@ -47,11 +47,13 @@ export default {
     },
     mounted(){
         this.keyword = this.$route.query.word;
+        let cates = this.$store.state.cms.categorys
 
-        getCategorys({}).then(res => {
-            let tmp = [{name: '全部', id: -1}, ...res.data]
-            this.cates = tmp
-        })
+        //getCategorys({}).then(res => {
+        cates = cates.filter((d)=>{return d.show == true;})
+        let tmp = [{name: '全部', id: -1}, ...cates]
+        this.cates = tmp
+        //})
     }
 }
 </script>

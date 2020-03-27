@@ -334,7 +334,7 @@ const state = {
     },
     other: {
       // lbt: { id: 175, height: 220 },TODO
-      ncpd: { id: 191, height: 220, count: 5, pid: 190, code: '', pcode: '' },
+      ncpd: { height: 220, count: 5, code: 'LBTUI', pcode: 'LBTU' },
       zqb: { 
         code: 'ZQB',
         pcode: 'ZQBP',
@@ -348,6 +348,7 @@ const state = {
         height: 330,
         children: {
           'm_ZLDX': { type: 'guo', count: 4 },
+          'm_THJS': { type: 'hai', count: 4 },
           'm_ZCDX': { type: 'hai', count: 4 },
           'm_FKWW': { type: 'guo', count: 4 },
           'm_ZBWT': { type: 'hai', count: 4 },
