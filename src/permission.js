@@ -19,6 +19,7 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
+  console.log(hasToken, store.getters.name)
 
   if (hasToken) {
     if (to.path === '/login') {
@@ -28,12 +29,12 @@ router.beforeEach(async(to, from, next) => {
     } else {
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
+        await store.dispatch('cms/getAllCates')
         next()
       } else {
         try {
           // get user info
           await store.dispatch('user/getInfo')
-          console.log('init global info.....')
           await store.dispatch('cms/getAllCates')
 
           next()
