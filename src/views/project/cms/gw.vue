@@ -40,6 +40,7 @@
 
 import comrender from '@/views/components/render'
 import { getCategorys, getDeptById } from '@/api/cms';
+import { getCategoryByCode } from '@/utils/cms'
 
 export default {
     components: {
@@ -73,6 +74,8 @@ export default {
         }
     },
     mounted(){
+        let allCategorys = this.$store.state.cms.categorys
+
         let lydw = this.$route.query.id
 
         getDeptById({deptId: lydw}).then(res => {
@@ -84,23 +87,23 @@ export default {
         
         this.midwidth = relative.other.meta.midwidth
 
-        getCategorys({}).then(res => {
-            for(let k in relative){
-                if(k != 'other') {
-                    let d = this.getCategoryById(res.data, relative[k].id)
-                    let hstr = relative[k].height ? `hei=${relative[k].height}` : ''
-                    let pstr = relative[k].percount ? `:percount=${relative[k].percount}` : ''
+        for(let k in relative){
+            if(k != 'other') {
+                let d = getCategoryByCode(allCategorys, relative[k].code) //this.getCategoryById(allCategorys, relative[k].id)
+                let hstr = relative[k].height ? `hei=${relative[k].height}` : ''
+                let pstr = relative[k].percount ? `:percount=${relative[k].percount}` : ''
 
-                    this[k] = `<main-panel lydw="${lydw}" isgw="true" dir="${relative[k].dir}" ${hstr} ${pstr} pkey="${k}" cid="${relative[k].id}" cname="${d.name}"></main-panel>`
-                }else{
-                    let d = this.getCategoryById(res.data, relative.other.timeline.id)
-                    this.t2 = `<gw-timeline isgw="true" lydw="${lydw}" hei="${relative.other.timeline.height}" cname="${d.name}" cid="${d.id}"></gw-timeline>`
-                }
+                this[k] = `<main-panel lydw="${lydw}" isgw="true" dir="${relative[k].dir}" ${hstr} ${pstr} pkey="${k}" cid="${d.id}" cname="${d.name}"></main-panel>`
+            }else{
+                let d = getCategoryByCode(allCategorys, relative.other.timeline.code)
+                this.t2 = `<gw-timeline isgw="true" lydw="${lydw}" hei="${relative.other.timeline.height}" cname="${d.name}" cid="${d.id}"></gw-timeline>`
             }
-        });
+        }
+        
         let obj = relative['other'];
-
-        this.t1 = `<zqb-full cid="${obj.zqb.id}" hei="${obj.zqb.height}" :isgw="true" lydw="${lydw}"></zqb-full>`
+        let zqbpad = getCategoryByCode(allCategorys, obj.zqb.pcode)
+        let zqbmod = zqbpad.children[0]
+        this.t1 = `<zqb-full cid="${zqbmod.id}" hei="${obj.zqb.height}" :isgw="true" lydw="${lydw}"></zqb-full>`
         // this.r4 = `<main-panel :count="${obj.ranks.count}" type="rank" dir="right" hei="180" spec="rank" cname="排行榜"></main-panel>`
         // this.r5 = `<main-contact :count="${obj.contact.count}"></main-contact>`
     }

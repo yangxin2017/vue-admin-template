@@ -19,7 +19,6 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  console.log(hasToken, store.getters.name)
 
   if (hasToken) {
     if (to.path === '/login') {
@@ -27,6 +26,28 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
+      // set 分辨率
+      let winWidth = window.screen.width
+      let winHeight = window.screen.height
+
+      // 1920 1080
+      // 2560 1080
+      // 2560 1440
+      let file = ''
+      if (winWidth <= 1920) {
+        file = 'f1'
+      } else {
+        if (winHeight <= 1080) {
+          file = 'f2'
+        }else {
+          file = 'f3'
+        }
+      }
+      
+      store.dispatch('app/setCmsJson', file)
+
+      console.log(store)
+
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
         await store.dispatch('cms/getAllCates')
