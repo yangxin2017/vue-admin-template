@@ -4,9 +4,9 @@
         <div class="depts">
             <div class="dp" v-for="(item, index) in data" :key="index">
                 <div :class="item.cls">
-                    <router-link :to="'gw?id=' + item.id">
+                    <!-- <router-link :to="'gw?id=' + item.id"> -->
                         <span>{{item.name}}</span>
-                    </router-link>
+                    <!-- </router-link> -->
                 </div>
             </div>
         </div>
@@ -41,6 +41,7 @@
 </template>
 <script>
 import { getDepts,getContents } from '@/api/cms'
+import { NewsModel } from '@/model/cms/news'
 import moment from 'moment'
 var mainstas = () => import('@/views/components/cms/mainstatics')
 

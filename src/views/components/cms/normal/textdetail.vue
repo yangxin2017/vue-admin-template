@@ -47,7 +47,7 @@ export default {
 .cms-text-detail{
     position:relative;height:calc(100% - 17px);
     .desc{
-        font-size:14px;color:#fff;height:100%;
+        font-size:14px;color:#fff;height:100%;word-break: break-all;
     }
     .link{
         position:absolute;

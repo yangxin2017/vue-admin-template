@@ -38,15 +38,26 @@ export default {
     },
     mounted(){
         getRanks({hot: false}).then(res => {
-            this.gxs = res.data
+            this.gxs = this.getResultCount(res)
         })
         getRanks({hot: true}).then(res => {
-            this.hots = res.data
+            this.hots = this.getResultCount(res)
         })
         if(this.count > 2){
             getWords({pagesize: 3}).then(res => {
                 this.words = res.data
             })
+        }
+    },
+    methods: {
+        getResultCount(res){
+            let cnt = res.data.length
+            let scnt = Math.min(cnt, 3)
+            let arr = []
+            for(let i=0;i<scnt;i++){
+                arr.push(res.data[i])
+            }
+            return arr
         }
     }
 }

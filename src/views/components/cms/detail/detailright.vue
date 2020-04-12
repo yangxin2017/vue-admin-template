@@ -9,7 +9,11 @@
             <span class="time">发布时间：{{obj.time}}</span>
         </div>
         <div class="ifas">
-            <iframe v-if="obj.nrwj" :src="obj.nrwj" width="100%" height="100%" marginwidth="0" marginheight="0" frameborder="0">
+            <!-- <pdf v-if="obj.file" :src="obj.file"></pdf> -->
+            <div v-if="ispdf==1 && loadTask" style="height:100%;overflow:auto;">
+                <pdf v-for="i in numPages" :key="i" :src="loadTask" :page="i"></pdf>
+            </div>
+            <iframe v-if="ispdf==2 && obj.file" :src="obj.file" width="100%" height="100%" marginwidth="0" marginheight="0" frameborder="0">
             </iframe>
             <video v-if="obj.video" controls="controls" :src="obj.video"></video>
         </div>
@@ -31,7 +35,12 @@
     </div>
 </template>
 <script>
+import pdf from 'vue-pdf'
+
 export default {
+    components: {
+        pdf
+    },
     props: {
         obj: {
             type: Object,
@@ -40,7 +49,36 @@ export default {
     },
     data(){
         return {
-            showdesc: false
+            showdesc: false,
+            loadTask: null,
+            numPages: undefined
+        }
+    },
+    mounted(){
+        
+    },
+    computed: {
+        ispdf(){
+            let ispdf = 1
+            if(this.obj.file){
+                if(this.obj.file.indexOf('.pdf') >= 0){
+                    ispdf = 1
+                    this.loadTask = pdf.createLoadingTask(this.obj.file)
+                    this.loadTask.then(res => {
+                        this.numPages = res.numPages;
+                    })
+                }else if(this.obj.file.indexOf('.doc') >= 0){
+                    ispdf = 2
+                    this.loadTask = null
+                }else{
+                    ispdf = -1
+                    this.loadTask = null
+                }
+            }else{
+                ispdf = -1
+                this.loadTask = null
+            }
+            return ispdf
         }
     }
 }

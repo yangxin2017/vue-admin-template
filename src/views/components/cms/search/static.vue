@@ -162,7 +162,7 @@ export default {
                         {
                             name: '各类目数量',
                             type: 'bar',
-                            barWidth: 50,
+                            // barWidth: 50,
                             data: ds,
                             itemStyle: {
                                 barBorderRadius: [35, 35, 0, 0]

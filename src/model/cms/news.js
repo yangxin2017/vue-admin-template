@@ -11,7 +11,7 @@ export class NewsModel{
         this.desc = desc
         this.pic = tpwj ? '/cms/webfile/' + tpwj : null
         this.video = spwj ? '/cms/webfile/' + spwj : null
-        this.file = nrwj ? '' : null
+        this.file = nrwj
         this.source = source
         this.clicks = clicks
         this.tagIds = tagIds
