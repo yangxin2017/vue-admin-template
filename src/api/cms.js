@@ -185,6 +185,9 @@ export function getDeptById(params){
 
 export function getJson(type){
   let f1 = {}, f2 = {}
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+  
   if(type == 'f1'){
     f1 = {
       l1: {
@@ -811,5 +814,7 @@ export function getJson(type){
       }
     }
   }
+  // f1.other.meta.width = width;
+  // f1.other.meta.height = height;
   return [f1, f2]
 }

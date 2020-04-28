@@ -10,10 +10,10 @@
         </div>
         <div class="ifas">
             <!-- <pdf v-if="obj.file" :src="obj.file"></pdf> -->
-            <div v-if="ispdf==1 && loadTask" style="height:100%;overflow:auto;">
+            <div v-if="ispdf==1 && loadTask" v-loading="loadingpdf" style="height:100%;overflow:auto;">
                 <pdf v-for="i in numPages" :key="i" :src="loadTask" :page="i"></pdf>
             </div>
-            <iframe v-if="ispdf==2 && obj.file" :src="obj.file" width="100%" height="100%" marginwidth="0" marginheight="0" frameborder="0">
+            <iframe @load="loadIframe()" v-if="ispdf==2 && obj.file" :src="obj.file" width="100%" height="100%" marginwidth="0" marginheight="0" frameborder="0">
             </iframe>
             <video v-if="obj.video" controls="controls" :src="obj.video"></video>
         </div>
@@ -51,7 +51,14 @@ export default {
         return {
             showdesc: false,
             loadTask: null,
-            numPages: undefined
+            numPages: undefined,
+            loadingpdf: false,
+            loadingword: false
+        }
+    },
+    methods: {
+        loadIframe(){
+            this.loadingword = false;
         }
     },
     mounted(){
@@ -63,11 +70,15 @@ export default {
             if(this.obj.file){
                 if(this.obj.file.indexOf('.pdf') >= 0){
                     ispdf = 1
+                    this.loadingpdf = true;
                     this.loadTask = pdf.createLoadingTask(this.obj.file)
                     this.loadTask.then(res => {
                         this.numPages = res.numPages;
+                        ////
+                        this.loadingpdf = false;
                     })
                 }else if(this.obj.file.indexOf('.doc') >= 0){
+                    this.loadingword = true;
                     ispdf = 2
                     this.loadTask = null
                 }else{

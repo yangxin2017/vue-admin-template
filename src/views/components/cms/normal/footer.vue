@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="ixx">
-            <span @click="showStatics" class="stj"></span>
+            <span @click="showStatics()" class="stj"></span>
             <span @click="showtoday=true" class="sgx"></span>
             <span class="syj"></span>
         </div>
@@ -19,7 +19,7 @@
             <span>军委联合参谋部、情报局信息通讯局主办</span><span>情报分析中心承办</span><span>报分析中心电话：010-55555555</span>
         </div>
     </div>
-    <main-statics v-if="showstatics" v-on:hide="hideStatics"></main-statics>
+    <!-- <main-statics v-if="showstatics" v-on:hide="hideStatics"></main-statics> -->
     <!-- -->
     <div class="update-layer">
         <div class="layer" :class="{'hidelayer': !showtoday}">
@@ -62,12 +62,16 @@ export default {
     methods: {
         showStatics(){
             this.showstatics = true
+            this.$emit('eventshowstatic', true);
         },
         hideStatics(){
             this.showstatics = false
         }
     },
     mounted(){
+        ////
+
+
         getDepts({}).then(res => {
             let i = 1;
             for(let d of res.data){
@@ -169,9 +173,9 @@ export default {
     width:100%;display:flex;
     padding:17px 30px 0 30px;
     justify-content:space-between;
-    position:relative;
+    position:relative;margin-top:15px;
     .depts{
-        flex:1;display:flex;position: relative;top: -17px;
+        flex:1;display:flex;position: relative;top: -12px;
     }
     .copyright{
         position:absolute;width:100%;height:29px;border-top:solid 1px #666;
@@ -207,7 +211,7 @@ export default {
             font-family:zz;
             font-size:16px;color:#fff;display:inline-block;
             width:120px;text-align:center;
-            margin:92px 0 0 -9px;cursor:pointer;
+            margin:93px 0 0 -9px;cursor:pointer;
         }
         &.i2{background-position:-198px 0;}
         &.i3{background-position:-396px 0;}

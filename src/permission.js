@@ -46,8 +46,6 @@ router.beforeEach(async(to, from, next) => {
       
       store.dispatch('app/setCmsJson', file)
 
-      console.log(store)
-
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
         await store.dispatch('cms/getAllCates')

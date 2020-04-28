@@ -226,7 +226,7 @@ export default {
     .title{
         font-size:22px;font-weight:bold;
         padding-left:20px;font-style:italic;
-        float:left;white-space: nowrap;margin-right:5px;
+        float:left;white-space: nowrap;margin-right:5px;padding-right: 6px;
     }
     .menu-con{
         float:left;flex:1;

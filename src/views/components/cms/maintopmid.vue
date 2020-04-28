@@ -1,7 +1,7 @@
 <template>
 <div class="cms-panel" :style="{height: hei + 'px'}">
     <div class="cms-panel-title">
-        <span class="spe-title-font title">{{datas.title}}</span>
+        <span class="spe-title-font title" style="padding-right:8px">{{datas.title}}</span>
         <ul class="menus">
             <li :class="{sel: item.id==curCid}" v-for="item in datas.children" :key="item.id">
                 <a @click="changeTab(item)">{{item.title}}</a>

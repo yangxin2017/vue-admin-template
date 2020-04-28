@@ -62,7 +62,7 @@ export default {
         flex-direction: row;
         flex-wrap: wrap;
         .li{
-            float:left;margin-bottom:15px;
+            float:left;margin-bottom:13px;
             text-align:center;margin-right:1px;
         }
     }

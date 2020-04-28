@@ -1,5 +1,5 @@
 <template>
-    <div class="lists">
+    <div class="lists" v-loading="loading">
         <div class="li" v-for="item in data" :key="item.id">
             <div class="cms-text-com">
                 <div class="title">
@@ -43,7 +43,8 @@ export default {
     },
     data(){
         return {
-            data: []
+            data: [],
+            loading: false
         }
     },
     methods: {
@@ -51,12 +52,13 @@ export default {
     mounted(){
         let isGuanwang = this.isgw == 'true' ? true : false
         let lydw = this.lydw != "-1" ? this.lydw : undefined
-
+        this.loading = true;
         getContents({cid: this.cid, pagesize: this.count, isgw: isGuanwang, lydw: lydw}).then(res => {
             for(let c of res.data){
                 let m = new NewsModel(c)
                 this.data.push(m)
             }
+            this.loading = false
         })
     }
 }

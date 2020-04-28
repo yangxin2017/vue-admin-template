@@ -548,10 +548,10 @@ export default {
 /* 页面统计分析弹层 */
 .layer-analysis {
   position: absolute;
-  top: 0;
+  top: -60px;
   left: 0;
   width: 100%;
-  height: 1080px;
+  height: 700px;
   background: rgba(0, 0, 0, 0.5);
   z-index: 10000;
   display: block;

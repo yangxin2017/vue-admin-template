@@ -1,7 +1,7 @@
 <template>
 <div class="cms-panel">
     <div class="cms-panel-title">
-        <span class="spe-title-font title">{{title}}</span>
+        <span class="spe-title-font title" style="padding-right:8px">{{title}}</span>
         <div class="bot-line">
             <span class="dot1"></span>
             <span class="dot-line"></span>

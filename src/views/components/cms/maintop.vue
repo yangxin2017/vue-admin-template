@@ -43,7 +43,6 @@ export default {
     },
     mounted(){
         getContents({cid: this.cid, pagesize: this.count}).then(res => {
-            console.log(res)
             if(res.data.length > 0){
                 let c = res.data[0];
                 let tmp = new NewsModel(c)
@@ -53,6 +52,7 @@ export default {
                     this.data.push(tmp)
                 }
             }
+            console.log(this.first)
         })
     }
 }
