@@ -26,7 +26,7 @@
             </div>
             <ul class="data-lists">
                 <li v-for="(item,index) in lists" :key="index">
-                    <router-link :to="item.link">
+                    <router-link :to="item.link" target="_blank">
                         <span class="sjx"></span><a >{{item.title}}</a>
                     </router-link>
                     <div class="data-info">

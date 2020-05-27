@@ -4,7 +4,7 @@
             <div class="cms-text-com">
                 <div class="title">
                     <span class="sjx"></span>
-                    <router-link :to="item.link">
+                    <router-link :to="item.link" target="_blank">
                         <a>{{item.title}}</a>
                     </router-link>
                 </div>

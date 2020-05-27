@@ -2,7 +2,7 @@
     <div class="cms-videos">
         <div class="li" v-for="item in data" :key="item.id" :style="{'margin-right': data.length==1 ? 0 : '25px'}">
             <video :src="item.video" controls="controls"></video>
-            <router-link :to="item.link">
+            <router-link :to="item.link" target="_blank">
                 <a class="title">{{item.title}}</a>
             </router-link>
         </div>

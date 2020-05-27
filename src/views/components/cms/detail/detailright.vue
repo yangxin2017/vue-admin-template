@@ -76,6 +76,8 @@ export default {
                         this.numPages = res.numPages;
                         ////
                         this.loadingpdf = false;
+                        ///
+                        res = null
                     })
                 }else if(this.obj.file.indexOf('.doc') >= 0){
                     this.loadingword = true;

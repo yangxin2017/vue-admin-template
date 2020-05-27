@@ -4,7 +4,7 @@
         <div class="cms-pictxt-bg">
             <img class="img" :src="item.pic" alt="" />
             <p class="title">
-                <router-link :to="item.link">
+                <router-link :to="item.link" target="_blank">
                     <a>{{item.title}}</a>
                 </router-link>
             </p>

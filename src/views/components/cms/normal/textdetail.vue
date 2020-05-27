@@ -4,7 +4,7 @@
             {{data.desc}}
         </p>
 
-        <router-link :to="data.link" v-if="data.link">
+        <router-link :to="data.link" v-if="data.link" target="_blank">
             <a class="link">详情>></a>
         </router-link>
     </div>
