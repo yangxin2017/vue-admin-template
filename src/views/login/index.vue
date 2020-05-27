@@ -54,7 +54,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import { login } from '@/api/cms'
+import { login, ssologin } from '@/api/cms'
 
 export default {
   name: 'Login',
@@ -96,6 +96,10 @@ export default {
       },
       immediate: true
     }
+  },
+  mounted(){
+    // console.log(this.$route.query)
+    
   },
   methods: {
     showPwd() {

@@ -10,6 +10,14 @@ function initUserToken(){
     return obj;
 }
 
+export function ssologin(params){
+  return request({
+    url: '/cms/ssologin',
+    method: 'get',
+    params
+  })
+}
+
 export function login(params){
   return request({
     url: '/cms/api/login',
