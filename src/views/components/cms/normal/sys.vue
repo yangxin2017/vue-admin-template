@@ -5,7 +5,7 @@
                 <div class="syses">
                     <div class="li" v-for="d in item" :key="d.id">
                         <img :src="d.pic" alt="" /><br/>
-                        <a target="_blank" :href="d.link">{{d.title}}</a>
+                        <a target="_blank" :href="d.url">{{d.title}}</a>
                     </div>
                 </div>
             </el-carousel-item>
@@ -39,6 +39,7 @@ export default {
     },
     mounted(){
         getContents({cid: this.cid, pagesize: this.count}).then(res => {
+            console.log(res)
             let len = Math.ceil(res.data.length / this.percount)
             let finarr = [];
             for(let i=0;i<len;i++){

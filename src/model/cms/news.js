@@ -2,10 +2,10 @@ import moment from 'moment'
 
 export class NewsModel{
     constructor(item) {
-        this.initContent(item.title, item.tpwj, item.spwj, item.nrwj, item.description, item.publishDate, item.lydwmc, item.clicks, item.id, item.tagIds, item.categoryId)
+        this.initContent(item.title, item.tpwj, item.spwj, item.nrwj, item.description, item.publishDate, item.lydwmc, item.clicks, item.id, item.tagIds, item.categoryId, item.url)
     }
 
-    initContent(title, tpwj, spwj, nrwj, desc, time, source, clicks, id, tagIds, cid){
+    initContent(title, tpwj, spwj, nrwj, desc, time, source, clicks, id, tagIds, cid, url){
         this.title = title
         this.link = "detail?id=" + id
         this.desc = desc
@@ -19,6 +19,8 @@ export class NewsModel{
         this.tags = []
         this.time = moment(time).format("YYYY-MM-DD")
         this.id = id
+        let token = localStorage.getItem("token");
+        this.url = "https://" + url + "?token=" + token
     }
 
 }

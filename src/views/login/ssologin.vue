@@ -12,6 +12,7 @@ export default {
     },
     mounted(){
         let token = this.$route.query['token'];
+        localStorage.setItem("token", token);
 
         this.$store.dispatch('user/ssologin', token).then(() => {
             this.$router.push({ path: this.redirect || '/cms' })
