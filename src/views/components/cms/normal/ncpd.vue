@@ -19,8 +19,8 @@
                         </router-link>
                     </div>
                     <div class="contents">
-                        <span class="time">{{item.time}}</span><br/>
                         <span class="source">{{item.source}}</span>
+                        <span class="time">{{item.time}}</span>
                     </div>
                 </div>
             </div>
@@ -94,33 +94,36 @@ export default {
     flex-flow: column;width:100%;
     height:calc(100% - 18px);
     .li{
-        padding:0 10px 0 0;
-        margin-bottom: 10px;
+        padding:0 0px 0 0;
+        margin-bottom: 13px;
     }
 }
 .cms-text-com{
-    display:flex;
     .title{
-        flex:1;
+        width:calc(100% - 148px);
+        display:inline-block;
         .sjx{
             background:url('../../../../assets/cms/content/icons.png') no-repeat -11px -67px;
             width:6px;height:6px;float:left;position:relative;top:7px;left:6px;
         }
         a{
-            font-size:16px;color:#fff;
-            margin-left:15px;display:block;height:36px;overflow:hidden;
+            font-size:14px;color:#fff;
+            margin-left:8px;display:block;overflow:hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             &:hover{
                 text-decoration:underline;
             }
         }
     }
     .contents{
-        width:100px;
+        width:142px;
         text-align:right;
+        display:inline-block;
         span{
-            color:#B8D517;font-size:14px;
+            color:#B8D517;font-size:12px;
             &.source{font-weight:bold;}
-            &.time{margin-left:15px;}
+            &.time{margin-left:11px;}
         }
     }
 }

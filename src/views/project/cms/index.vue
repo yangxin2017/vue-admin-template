@@ -3,7 +3,7 @@
     <comrender :html="head" />
     <div>
       <div class="cms-contents">
-        <div class="cms-con-left">
+        <div class="cms-con-left" :style="{width: lrwidth + 'px'}">
           <div class="cms-com" v-if="l1">
             <comrender :html="l1" />
           </div>
@@ -49,7 +49,7 @@
             </div>
           </div>
         </div>
-        <div class="cms-con-right">
+        <div class="cms-con-right" :style="{width: lrwidth + 'px'}">
           <!-- <comrender :html="l1" /> -->
           <div class="cms-com">
             <comrender :html="r1" />
@@ -118,7 +118,8 @@ export default {
       ft: `<main-footer></main-footer>`,
       ms: ``,
       showTJ: false,
-      midwidth: 1120
+      midwidth: 1120,
+      lrwidth: 300
     };
   },
   methods: {
@@ -148,6 +149,7 @@ export default {
     let relative = this.$store.state.app.cms;
 
     this.midwidth = relative.other.meta.midwidth;
+    this.lrwidth = (relative.other.meta.width - 38 - this.midwidth) / 2;
     ///
     let t1Cate = {};
 
@@ -239,7 +241,6 @@ export default {
   height: 100%;
 
   .cms-con-right {
-    flex: 1;
     height: calc(100% + 20px);
     display: flex;
     justify-content: space-between;
@@ -249,7 +250,6 @@ export default {
     }
   }
   .cms-con-left {
-    flex: 1;
     height: calc(100% + 20px);
     display: flex;
     justify-content: space-between;

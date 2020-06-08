@@ -48,7 +48,7 @@ const actions = {
             setToken(data.authToken)
             setUserId(data.data.id)
           }
-          resolve()
+          resolve(data)
         }else{
           reject(data)
         }

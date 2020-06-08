@@ -52,17 +52,17 @@ export default {
                     this.data.push(tmp)
                 }
             }
-            console.log(this.first)
         })
     }
 }
 </script>
 <style lang="scss" scoped>
 .cms-top{
-    display:flex;height:100%;
-    justify-content:space-around;
+    height:100%;
+    justify-content:space-between;
     .lbt{
-        flex: 4;margin:20px 20px 0 40px;
+        float:left;
+        width:321px;margin:0px 20px 0 40px;
         height:calc(100% - 15px);padding:5px;border:solid 1px rgba(255,255,255,0.3);
         border-radius:0 5px 0 5px;
         video{
@@ -70,6 +70,6 @@ export default {
             width:100%;height:100%;
         }
     }
-    .zqb{flex: 5;height:calc(100% - 15px);margin:20px 0px 0 0px;}
+    .zqb{height:calc(100% - 15px);margin:20px 0px 0 372px;}
 }
 </style>

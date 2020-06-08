@@ -202,31 +202,31 @@ export function getJson(type){
         code: 'MBQB',
         dir: 'left',
         children: {
-            'm_MBQBYJ': { type: 'text2', count: 3 },
+            'm_MBQBYJ': { type: 'text2', count: 5 },
             'm_YTGL': { type: 'pic', count: 3 },
-            'm_SWMX': { type: 'text2', count: 3 }
+            'm_SWMX': { type: 'text2', count: 5 }
         }
       },
       l2: {
         code: 'ZHYJ',
         dir: 'left',
         children: {
-            'm_ZLXS': { type: 'text2', count: 3 },
-            'm_ZCYJ': { type: 'text2', count: 3 },
-            'm_WJJS': { type: 'text2', count: 3 },
-            'm_KJZB': { type: 'text2', count: 3 },
-            'm_XXLY': { type: 'text2', count: 3 }
+            'm_ZLXS': { type: 'text2', count: 5 },
+            'm_ZCYJ': { type: 'text2', count: 5 },
+            'm_WJJS': { type: 'text2', count: 5 },
+            'm_KJZB': { type: 'text2', count: 5 },
+            'm_XXLY': { type: 'text2', count: 5 }
         }
       },
       l3: {
         code: 'KYQB',
         dir: 'left',
         children: {
-            'm_JQYC': { type: 'text2', count: 3 },
-            'm_SXZTP': { type: 'text2', count: 3 },
-            'm_ZKBB': { type: 'text2', count: 3 },
-            'm_KYTS': { type: 'text2', count: 3 },
-            'm_TSZL': { type: 'text2', count: 3 }
+            'm_JQYC': { type: 'text2', count: 5 },
+            'm_SXZTP': { type: 'text2', count: 5 },
+            'm_ZKBB': { type: 'text2', count: 5 },
+            'm_KYTS': { type: 'text2', count: 5 },
+            'm_TSZL': { type: 'text2', count: 5 }
         }
       },
       l4: {
@@ -234,25 +234,25 @@ export function getJson(type){
         dir: 'left',
         children: {
             'm_ZLXH': { type: 'detail', count: 1 },
-            'm_ZLXHHH': { type: 'text2', count: 3 },
-            'm_ZLYJ': { type: 'text', count: 3 },
-            'm_WFJWJG': { type: 'text', count: 3 }
+            'm_ZLXHHH': { type: 'text2', count: 5 },
+            'm_ZLYJ': { type: 'text2', count: 5 },
+            'm_WFJWJG': { type: 'text2', count: 5 }
         }
       },
       b1: {
         code: 'QBWH',
         dir: 'left',
         children: {
-          'm_XBYL': { type: 'text2', count: 3 },
-          'm_LSYG': { type: 'text2', count: 3 },
-          'm_DDFC': { type: 'text2', count: 3 }
+          'm_XBYL': { type: 'text2', count: 5 },
+          'm_LSYG': { type: 'text2', count: 5 },
+          'm_DDFC': { type: 'text2', count: 5 }
         }
       },
       b2: {
         code: 'ZCFG',
         dir: 'left',
         children: {
-          'm_NZCFG': { type: 'text2', count: 3 }
+          'm_NZCFG': { type: 'text2', count: 5 }
         }
       },
       r1: {
@@ -260,19 +260,19 @@ export function getJson(type){
         dir: 'right',
         children: {
           'm_ZCZTP': { type: 'video', count: 1 },
-          'm_ZCYQTS': { type: 'text2', count: 3 },
-          'm_QKBG': { type: 'text2', count: 3 },
-          'm_TSYT': { type: 'text2', count: 3 },
-          'm_TSPG': { type: 'text2', count: 3 }
+          'm_ZCYQTS': { type: 'text2', count: 5 },
+          'm_QKBG': { type: 'text2', count: 5 },
+          'm_TSYT': { type: 'text2', count: 5 },
+          'm_TSPG': { type: 'text2', count: 5 }
         }
       },
       r2: {
         code: 'JCDQ',
         dir: 'right',
         children: {
-          'm_WTJQ': { type: 'text2', count: 2 },
-          'm_WTJZF': { type: 'text2', count: 2 },
-          'm_ZZTL': { type: 'text2', count: 2 }
+          'm_WTJQ': { type: 'text2', count: 3 },
+          'm_WTJZF': { type: 'text2', count: 4 },
+          'm_ZZTL': { type: 'text2', count: 4 }
         },
         height: 154
       },
@@ -287,7 +287,7 @@ export function getJson(type){
       },
       other: {
         // lbt: { id: 175, height: 220 },TODO
-        ncpd: { height: 220, count: 5, code: 'LBTUI', pcode: 'LBTU' },
+        ncpd: { height: 205, count: 6, code: 'LBTUI', pcode: 'LBTU' },
         zqb: { 
           code: 'ZQB',
           pcode: 'ZQBP',
@@ -300,12 +300,12 @@ export function getJson(type){
           code: 'ZYDX',
           height: 330,
           children: {
-            'm_ZLDX': { type: 'guo', count: 4 },
-            'm_THJS': { type: 'hai', count: 4 },
-            'm_ZCDX': { type: 'hai', count: 4 },
-            'm_FKWW': { type: 'guo', count: 4 },
-            'm_ZBWT': { type: 'hai', count: 4 },
-            'm_RDWT': { type: 'guo', count: 4 }
+            'm_ZLDX': { type: 'guo', count: 5 },
+            'm_THJS': { type: 'hai', count: 5 },
+            'm_ZCDX': { type: 'hai', count: 5 },
+            'm_FKWW': { type: 'guo', count: 5 },
+            'm_ZBWT': { type: 'hai', count: 5 },
+            'm_RDWT': { type: 'guo', count: 5 }
           }
         },
         meta: {

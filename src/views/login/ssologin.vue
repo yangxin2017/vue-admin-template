@@ -14,10 +14,12 @@ export default {
         let token = this.$route.query['token'];
         localStorage.setItem("token", token);
 
-        this.$store.dispatch('user/ssologin', token).then(() => {
+        this.$store.dispatch('user/ssologin', token).then((res) => {
             this.$router.push({ path: this.redirect || '/cms' })
+            // 
+            this.txt = '登录成功！' + err.msg
         }).catch((err) => {
-            this.txt = '登录失败！' + err.info
+            this.txt = '登录失败！' + err.msg
         })
     }
 }
