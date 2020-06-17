@@ -10,13 +10,12 @@
     </div>
     <div class="ifas">
       <!-- <pdf v-if="obj.file" :src="obj.file"></pdf> -->
-      <div v-if="ispdf==1 && loadTask" v-loading="loadingpdf" style="height:100%;overflow:auto;">
+      <!-- <div v-if="ispdf==1 && loadTask" v-loading="loadingpdf" style="height:100%;overflow:auto;">
         <pdf v-for="i in numPages" :key="i" :src="loadTask" :page="i"></pdf>
-      </div>
+      </div>-->
       <iframe
-        @load="loadIframe()"
-        v-if="ispdf==2 && obj.file"
-        :src="obj.file"
+        v-if="fileurl"
+        :src="fileurl"
         width="100%"
         height="100%"
         marginwidth="0"
@@ -82,34 +81,37 @@ export default {
   },
   mounted() {},
   computed: {
-    ispdf() {
-      let ispdf = 1;
-      if (this.obj.file) {
-        if (this.obj.file.indexOf(".pdf") >= 0) {
-          ispdf = 1;
-          this.loadingpdf = true;
-          this.loadTask = pdf.createLoadingTask(this.obj.file);
-          this.loadTask.then(res => {
-            this.numPages = res.numPages;
-            ////
-            this.loadingpdf = false;
-            ///
-            res = null;
-          });
-        } else if (this.obj.file.indexOf(".doc") >= 0) {
-          this.loadingword = true;
-          ispdf = 2;
-          this.loadTask = null;
-        } else {
-          ispdf = -1;
-          this.loadTask = null;
-        }
-      } else {
-        ispdf = -1;
-        this.loadTask = null;
-      }
-      return ispdf;
+    fileurl() {
+      return '/cms/webfile/' + this.obj.file;
     }
+    // ispdf() {
+    //   let ispdf = 1;
+    //   if (this.obj.file) {
+    //     if (this.obj.file.indexOf(".pdf") >= 0) {
+    //       ispdf = 1;
+    //       this.loadingpdf = true;
+    //       this.loadTask = pdf.createLoadingTask(this.obj.file);
+    //       this.loadTask.then(res => {
+    //         this.numPages = res.numPages;
+    //         ////
+    //         this.loadingpdf = false;
+    //         ///
+    //         res = null;
+    //       });
+    //     } else if (this.obj.file.indexOf(".doc") >= 0) {
+    //       this.loadingword = true;
+    //       ispdf = 2;
+    //       this.loadTask = null;
+    //     } else {
+    //       ispdf = -1;
+    //       this.loadTask = null;
+    //     }
+    //   } else {
+    //     ispdf = -1;
+    //     this.loadTask = null;
+    //   }
+    //   return ispdf;
+    // }
   }
 };
 </script>

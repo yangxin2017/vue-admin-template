@@ -223,7 +223,6 @@ export function getJson(type){
         dir: 'left',
         children: {
             'm_JQYC': { type: 'text2', count: 5 },
-            'm_SXZTP': { type: 'text2', count: 5 },
             'm_ZKBB': { type: 'text2', count: 5 },
             'm_KYTS': { type: 'text2', count: 5 },
             'm_TSZL': { type: 'text2', count: 5 }
@@ -252,7 +251,9 @@ export function getJson(type){
         code: 'ZCFG',
         dir: 'left',
         children: {
-          'm_NZCFG': { type: 'text2', count: 5 }
+          'm_QJXFG': { type: 'text2', count: 5 },
+          'm_LYXFG': { type: 'text2', count: 5 },
+          'm_QTFG': { type: 'text2', count: 5 }
         }
       },
       r1: {
@@ -271,8 +272,8 @@ export function getJson(type){
         dir: 'right',
         children: {
           'm_WTJQ': { type: 'text2', count: 3 },
-          'm_WTJZF': { type: 'text2', count: 4 },
-          'm_ZZTL': { type: 'text2', count: 4 }
+          'm_WTJZF': { type: 'text2', count: 3 },
+          'm_ZZTL': { type: 'text2', count: 3 }
         },
         height: 154
       },
@@ -287,7 +288,12 @@ export function getJson(type){
       },
       other: {
         // lbt: { id: 175, height: 220 },TODO
-        ncpd: { height: 205, count: 6, code: 'LBTUI', pcode: 'LBTU' },
+        ///  'm_SXZTP': { type: 'text2', count: 5 },
+        ncpd: [
+          { height: 205, count: 6, code: 'SXZTP', pcode: 'LBTU' },
+          { height: 205, count: 6, code: 'LBTUI', pcode: 'LBTU' },
+          { height: 205, count: 6, code: 'GDLTJZ', pcode: 'LBTU' }
+        ],
         zqb: { 
           code: 'ZQB',
           pcode: 'ZQBP',

@@ -23,6 +23,10 @@ import { NewsModel } from "@/model/cms/news";
 
 export default {
   props: {
+    pid: {
+      type: String,
+      default: "-1"
+    },
     cid: {
       type: Number,
       default: -1
@@ -47,6 +51,7 @@ export default {
   },
   methods: {},
   mounted() {
+    console.log(this.pid)
     let isGuanwang = this.isgw == "true" ? true : false;
     let lydw = this.lydw != "-1" ? this.lydw : undefined;
 
@@ -54,7 +59,8 @@ export default {
       cid: this.cid,
       pagesize: this.count,
       isgw: isGuanwang,
-      lydw: lydw
+      lydw: lydw,
+      containChild: true
     }).then(res => {
       for (let c of res.data) {
         let tmp = new NewsModel(c);

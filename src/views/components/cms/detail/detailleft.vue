@@ -92,10 +92,10 @@ export default {
     },
     methods: {
         groute(item){
-            window.location.href = "/web/#/cms/detail?id=" + item.id
-            window.location.reload();
+            // window.location.href = "/web/#/cms/detail?id=" + item.id
+            // window.location.reload();
             // window.open("/web/#/cms/detail?id=" + item.id, "_top")
-            // this.$emit('changeContent', item.id)
+            this.$emit('changeContent', item.id)
         },
         search(){
             this.setcontentlist()

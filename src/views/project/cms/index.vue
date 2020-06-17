@@ -173,10 +173,12 @@ export default {
       }
     }
 
-    t1Cate = getCategoryByCode(allCategorys, relative["other"].ncpd.pcode);
+    let ncpds = relative["other"].ncpd
+    let t1code = ncpds[0].pcode;
+    t1Cate = getCategoryByCode(allCategorys, t1code);
     let firstNCPD = t1Cate.children[0];
 
-    this.t1 = `<main-top title="${t1Cate.name}" hei="${relative["other"].ncpd.height}" :count="${relative["other"].ncpd.count}" cid="${firstNCPD.id}"></main-top>`;
+    this.t1 = `<main-top title="${t1Cate.name}" hei="${relative["other"].ncpd.height}" :count="5" cid="${t1code}"></main-top>`;
     //});
     let obj = relative["other"];
 

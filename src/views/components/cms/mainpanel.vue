@@ -4,7 +4,7 @@
             <span class="spe-title-font title">{{datas.title}}</span>
             <div class="menu-con">
                 <img :class="{revers: scrollDir=='left'}" @click="scrollContent" v-if="showScrollBtn" class="next" src="../../../assets/cms/content/next.png" alt="" />
-                <div ref="wrapperdom" class="wrapper" :style="{width: wrapperwidth + 'px'}">
+                <div ref="wrapperdom" class="wrapper" :style="{'width': wrapperwidth + 'px'}">
                     <ul class="menus" v-if="datas.children.length > 1">
                         <li :class="index==curIndex ? 'sel' : ''" v-for="(item, index) in datas.children" :key="index">
                             <a @click="curIndex=index">{{item.title}}</a>
@@ -120,7 +120,7 @@ export default {
             setTimeout(()=>{
                 let w = this.$refs.titledom.clientWidth
                 let w0 = this.$refs.titledom.children[0].clientWidth
-                this.wrapperwidth = w - w0 - 60
+                this.wrapperwidth = w - w0 - 40
                 /////
                 let w1 = this.wrapperwidth // this.$refs.wrapperdom.offsetWidth
                 // console.log(w1)
@@ -128,7 +128,7 @@ export default {
                     let childs = this.$refs.wrapperdom.children[0].children
                     let w2 = 0
                     for(let c of childs){
-                        w2 += c.clientWidth + 18
+                        w2 += c.clientWidth + 10
                     }
                     
                     if(w1 < w2){
@@ -224,22 +224,25 @@ export default {
     background:url('../../../assets/cms/content/icons.png') no-repeat -9px -11px;
     width:100%;height:26px;display:flex;
     .title{
-        font-size:22px;font-weight:bold;
+        font-size:20px;font-weight:bold;
         padding-left:20px;font-style:italic;
         float:left;white-space: nowrap;margin-right:5px;padding-right: 6px;
     }
     .menu-con{
         float:left;flex:1;
+        white-space: nowrap;
     }
     .wrapper{
-        overflow:hidden;width:calc(100% - 50px);
+        overflow:hidden;
     }
     .menus{
-        list-style:none;margin:0px 0 0 0;padding:6px 0 0 15px;white-space:nowrap;
+        list-style:none;margin:0px 0 0 0;padding:6px 0 0 8px;white-space:nowrap;
+        display:flex;
+        justify-content: flex-start;
         li{
-            margin:0 13px 0 0;display:inline-block;
+            margin:0 9px 0 0;display:inline-block;
             a{
-                font-size:16px;
+                font-size:14px;
                 color:#fff;font-style: italic;
                 font-weight:bold;
             }
@@ -250,7 +253,7 @@ export default {
     }
     .next{
         cursor:pointer;
-        float:right;margin-top:6px;margin-right:20px;
+        float:right;margin-top:6px;margin-right:9px;
         &.revers{
             transform:rotate(180deg);
         }

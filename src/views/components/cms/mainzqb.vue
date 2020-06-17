@@ -56,6 +56,7 @@
 </template>
 <script>
 import { getContents, getDepts } from '@/api/cms'
+import { Base64 } from 'js-base64';
 export default {
     props: {
         cid: {
@@ -85,7 +86,12 @@ export default {
                 getContents({cid: this.cid, iszqb: true, lydw: deptId, pagesize: 1}).then(res => {
                     if(res.data.length > 0){
                         let d = res.data[0]
-                        let tables = d.sftt != '' ? JSON.parse(d.sftt) : []
+                        let tables = []
+                        if(d.sftt){
+                            let strs = Base64.decode(d.sftt)
+                            console.log(strs)
+                            tables = strs ? JSON.parse(strs) : []
+                        }
                         let fts = []
                         
                         //////////////////
