@@ -38,9 +38,9 @@ const actions = {
       ssologin({username: "", password: "", token: token}).then((response)=>{
         let data = response
         if(data.success){
-          if(data.url == "admin"){
-            window.location.href = window.location.origin + "/cms/admin/"
-          }
+          // if(data.url == "admin"){
+          //   window.location.href = window.location.origin + "/webadmin/#/content/"
+          // }
           if(data.authToken && data.data){
             commit('SET_TOKEN', data.authToken)
             commit('SET_USERID', data.data.id)
