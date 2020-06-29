@@ -10,8 +10,8 @@
         </div>
         <div class="cms-fl right">
             <span class="cms-hd-title">{{ name }}</span>
-            <!-- <span class="cms-hd-icons i1"></span>
-            <span class="cms-hd-icons i2"></span> -->
+            <span class="cms-hd-icons i1"></span>
+            <!-- <span class="cms-hd-icons i2"></span> -->
             <span style="cursor:pointer" class="cms-hd-icons i3" @click="logout"></span>
         </div>
     </div>
