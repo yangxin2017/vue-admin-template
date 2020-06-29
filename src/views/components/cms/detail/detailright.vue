@@ -14,7 +14,7 @@
         <pdf v-for="i in numPages" :key="i" :src="loadTask" :page="i"></pdf>
       </div>-->
       <iframe
-        v-if="fileurl"
+        v-if="fileurl && !obj.video"
         :src="fileurl"
         width="100%"
         height="100%"
@@ -82,7 +82,10 @@ export default {
   mounted() {},
   computed: {
     fileurl() {
-      return '/cms/webfile/' + this.obj.file;
+      if (this.obj.file) {
+        return "/cms/webfile/" + this.obj.file;
+      }
+      return "";
     }
     // ispdf() {
     //   let ispdf = 1;
