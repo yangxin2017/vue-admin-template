@@ -65,7 +65,8 @@ export default {
   methods: {
     goWeb(item) {
       if (item && item.url) {
-        window.open(item.url);
+        let token = localStorage.getItem("token");
+        window.open(item.url + "?token=" + token);
       }
     },
     showStatics() {
