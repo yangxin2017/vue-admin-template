@@ -8,7 +8,8 @@ const getDefaultState = () => {
     userId: getUserId(),
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    usermod: null
   }
 }
 
@@ -30,6 +31,9 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
+  SET_USERMOD: (state, usermod) => {
+    state.usermod = usermod
+  }
 }
 
 const actions = {
@@ -92,6 +96,7 @@ const actions = {
         const { name, avatar } = data
 
         commit('SET_NAME', name)
+        commit('SET_USERMOD', data)
         // commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {

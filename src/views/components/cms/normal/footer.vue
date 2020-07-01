@@ -18,7 +18,7 @@
       <div class="copyright">
         <span>军委联合参谋部情报局·信息通信局主办</span>
         <span>情报分析中心承办</span>
-        <span>报分析中心电话：0201-747407</span>
+        <span>电话：0201-747407</span>
       </div>
     </div>
     <!-- <main-statics v-if="showstatics" v-on:hide="hideStatics"></main-statics> -->
