@@ -13,5 +13,11 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+
+    <script type="javascript">
+      if(typeof chrome != 'undefined' && typeof chrome.resize == 'function'){
+        chrome.resize(-1, -1);
+      }
+    </script>
   </body>
 </html>

@@ -11,7 +11,7 @@ export default {
         }
     },
     mounted(){
-        let token = this.$route.query['token'];
+        let token = this.$route.query['access_token'];
         localStorage.setItem("token", token);
 
         this.$store.dispatch('user/ssologin', token).then((res) => {
