@@ -196,6 +196,7 @@ export function getJson(type){
   let width = window.innerWidth;
   let height = window.innerHeight;
   
+  type = 'f1'
   if(type == 'f1'){
     f1 = {
       l1: {

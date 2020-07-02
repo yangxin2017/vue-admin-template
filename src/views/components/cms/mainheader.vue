@@ -41,7 +41,7 @@ export default {
             this.$router.push(`/login?redirect=${this.$route.fullPath}`)
         },
         goSetting(){
-            window.location.href = `/webadmin/content/`;
+            window.location.href = `/webadmin/#/content/`;
         }
     },
     computed: {

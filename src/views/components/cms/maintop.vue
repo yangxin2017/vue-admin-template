@@ -82,7 +82,7 @@ export default {
     float: left;
     width: 321px;
     margin: 0px 20px 0 40px;
-    height: calc(100% - 15px);
+    height: 200px;
     padding: 5px;
     border: solid 1px rgba(255, 255, 255, 0.3);
     border-radius: 0 5px 0 5px;
