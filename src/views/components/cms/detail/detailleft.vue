@@ -67,12 +67,12 @@ import { NewsModel } from '@/model/cms/news'
 export default {
     props: {
         cid: {
-            type: Number,
-            default: -1
+            type: String,
+            default: "-1"
         },
         contentId: {
-            type: Number,
-            default: -1
+            type: String,
+            default: "-1"
         }
     },
     data(){

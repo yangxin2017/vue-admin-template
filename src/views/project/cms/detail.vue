@@ -65,16 +65,41 @@ export default {
                 let c = res.data
                 let tmp = new NewsModel(c)
 
-                if(c.tagIds){
-                    let tagid = c.tagIds.split(' ').join(',')
-                    getTags({ids: tagid}).then(restags => {
-                        tmp.tags = restags.data ? restags.data : []
+                let curCate = null;
+                console.log(this.$store.getters);
+                //get curcates
+                for(let c1 of this.$store.getters.categorys){
+                    for(let c2 of c1.children){
+                        if(c2.id == caid){
+                            curCate = c2;
+                            break;
+                        }
+                    }
+                }
+                console.log(curCate);
+                tmp.sortstr = curCate ? curCate.sortstr : "";
 
-                        this.content = tmp
-                    })
+                if(c.tagIds){
+                    let tags = []
+                    let tidnames = c.tagIds.split(",");
+                    for(let t of tidnames){
+                        if(t != ""){
+                            let ar = t.split("|")
+                            tags.push(ar[0]);
+                        }
+                    }
+                    // let tagid = c.tagIds.split(' ').join(',')
+                    tmp.tags = tags;
+                    this.content = tmp;
+                    // getTags({ids: tagid}).then(restags => {
+                    //     tmp.tags = restags.data ? restags.data : []
+
+                    //     this.content = tmp
+                    // })
                 }else{
                     this.content = tmp
                 }
+                console.log(this.content)
                 
             })
         }

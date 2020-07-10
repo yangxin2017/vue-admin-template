@@ -86,10 +86,13 @@ export default {
   }
 }
 .cms-text-com {
-  white-space: nowrap;
+  display: flex;
+  justify-content: space-between;
   .title {
-    display: inline-block;
-    width: calc(100% - 148px);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    flex: 1;
     .sjx {
       background: url("../../../../assets/cms/content/icons.png") no-repeat -11px -67px;
       width: 6px;
@@ -116,7 +119,7 @@ export default {
     }
   }
   .contents {
-    width: 142px;
+    min-width: 142px;
     text-align: right;
     display: inline-block;
     span {

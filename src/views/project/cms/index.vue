@@ -343,8 +343,9 @@ export default {
       display: flex;
       justify-content: space-around;
       .cms-com-in {
-        flex: 1;
+        flex: none;
         margin: 0 0px 0px 0;
+        width: 49%;
       }
     }
   }

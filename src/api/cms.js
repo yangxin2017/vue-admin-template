@@ -26,6 +26,17 @@ export function login(params){
   })
 }
 
+export function getPdfImage({nrwj, page}){
+  let obj = initUserToken();
+  let params = Object.assign(obj, {nrwj: nrwj, page: page});
+
+  return request({
+    url: '/cms/api/getpdf',
+    method: 'get',
+    params
+  })
+}
+
 export async function getContents(params){
   let obj = initUserToken();
   params = Object.assign(obj, params);

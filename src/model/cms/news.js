@@ -20,7 +20,7 @@ export class NewsModel{
         this.time = moment(time).format("YYYY-MM-DD")
         this.id = id
         let token = localStorage.getItem("token");
-        this.url = "https://" + url + "?access_token=" + token
+        this.url = url + "?access_token=" + token
     }
 
 }

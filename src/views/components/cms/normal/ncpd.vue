@@ -194,6 +194,13 @@ export default {
     padding: 0 0px 0 0;
     margin-bottom: 13px;
   }
+  .cms-text-com{
+    display:flex;
+    justify-content: space-between;
+    .contents{
+      display: flex;;
+    }
+  }
 }
 .cms-text-com {
   .title {
@@ -222,12 +229,13 @@ export default {
     }
   }
   .contents {
-    width: 142px;
+    min-width: 142px;
     text-align: right;
     display: inline-block;
     span {
       color: #b8d517;
       font-size: 12px;
+      white-space: nowrap;
       &.source {
         font-weight: bold;
       }

@@ -5,9 +5,9 @@
         <el-carousel-item v-for="item in data" :key="item.id">
           <div style="position:relative;height:100%;">
             <video controls="controls" :src="item.video"></video>
-            <router-link :to="item.link" target="_blank">
+            <!-- <router-link :to="item.link" target="_blank">
               <span class="tls" style>{{item.title}}</span>
-            </router-link>
+            </router-link> -->
           </div>
         </el-carousel-item>
       </el-carousel>

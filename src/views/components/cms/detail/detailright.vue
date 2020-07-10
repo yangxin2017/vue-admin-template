@@ -2,27 +2,73 @@
   <div class="cms-d-detail" v-if="obj">
     <h2>{{obj.title}}</h2>
     <div class="cms-d-tags">
-      <span class="tg" v-for="item in obj.tags" :key="item.id">{{item.name}}</span>
+      <span class="tg" v-for="item in obj.tags" :key="item.id">{{item}}</span>
     </div>
     <div class="infor">
       <span class="source">来源单位：{{obj.source}}</span>
       <span class="time">发布时间：{{obj.time}}</span>
     </div>
-    <div class="ifas">
-      <!-- <pdf v-if="obj.file" :src="obj.file"></pdf> -->
-      <!-- <div v-if="ispdf==1 && loadTask" v-loading="loadingpdf" style="height:100%;overflow:auto;">
-        <pdf v-for="i in numPages" :key="i" :src="loadTask" :page="i"></pdf>
-      </div>-->
-      <iframe
-        v-if="fileurl && !obj.video"
-        :src="fileurl"
-        width="100%"
-        height="100%"
-        marginwidth="0"
-        marginheight="0"
-        frameborder="0"
-      ></iframe>
-      <video v-if="obj.video" controls="controls" :src="obj.video"></video>
+
+    <div class="ifas-container">
+      <div v-for="item in defaultsort" :key="item" style="height:100%;">
+        <div style="position:relative;height:100%;">
+          <div
+            v-if="busy"
+            style="text-align:center;z-index:99;position:absolute;top:0;left:0;width:100%;height:30px;background:rgba(0,0,0,0.33);font-size:14px;color:#fff;padding:0 0 0 10px;line-height:30px;"
+          >正在获取文件，请稍候...</div>
+          <div
+            class="ifas"
+            style="position:relative;height:100%;overflow:auto"
+            v-if="item == 'nrwj' && fileurl"
+          >
+            <div
+              class="imgs"
+              v-infinite-scroll="loadMore"
+              :infinite-scroll-disabled="busy"
+              :infinite-scroll-distance="100"
+            >
+              <img v-for="(item, inx) in resimages" :key="inx" :src="item" alt />
+            </div>
+            <!-- <div
+            style="background:rgb(50, 54, 57);width:100%;height:43px;position:absolute;z-index:0;left:0;top:0;"
+            ></div>-->
+            <!-- <embed ref="myiframe" :src="fileurl" style="width:100%;height:100%;"  oncontextmenu="return false;" onselectstart="return false;" /> -->
+            <!-- <iframe
+            @load="loadFile"
+            :src="fileurl"
+            width="100%"
+            height="100%"
+            marginwidth="0"
+            marginheight="0"
+            frameborder="0"
+            ref="myiframe"
+            ></iframe>-->
+            <!-- <pdf
+            v-for="i in numPages"
+            :key="i"
+            :src="loadTask"
+            :page="i"
+            style="display: block;margin:10px 0;"
+            ></pdf>-->
+          </div>
+        </div>
+        <div class="ifas" style="position:relative;height:100%;" v-if="item == 'spwj' && obj.video">
+          <video controls="controls" :src="obj.video"></video>
+        </div>
+
+        <div
+          class="ifas"
+          style="position:relative;text-align:center;display:flex;align-items:center;justify-content: center;height:100%;"
+          v-if="item == 'tpwj' && obj.pic"
+        >
+          <img
+            :src="obj.pic"
+            alt
+            @click="dialogVisible=true"
+            style="max-width:100%;max-height:100%;"
+          />
+        </div>
+      </div>
     </div>
 
     <div class="d-hideinfo" :class="{hide: !showdesc}">
@@ -34,11 +80,11 @@
         <br />
         {{obj.desc}}
       </div>
-      <div class="img" v-if="obj.pic">
+      <!-- <div class="img" v-if="obj.pic">
         <b>图片：</b>
         <br />
         <img :src="obj.pic" alt @click="dialogVisible=true" />
-      </div>
+      </div>-->
     </div>
 
     <el-dialog title="图片预览" :visible.sync="dialogVisible" width="80%">
@@ -52,12 +98,10 @@
   </div>
 </template>
 <script>
-import pdf from "vue-pdf";
+import { getPdfImage } from "@/api/cms";
+import { Base64 } from "js-base64";
 
 export default {
-  components: {
-    pdf
-  },
   props: {
     obj: {
       type: Object,
@@ -71,18 +115,97 @@ export default {
       numPages: undefined,
       loadingpdf: false,
       loadingword: false,
-      dialogVisible: false
+      dialogVisible: false,
+      pages: 0,
+      busy: false,
+      resimages: [],
+      isfirst: false
     };
   },
   methods: {
     loadIframe() {
       this.loadingword = false;
+    },
+    loadFile(url) {
+      this.loadTask = pdf.createLoadingTask(url);
+      this.loadTask.promise.then(pdf => {
+        this.numPages = pdf.numPages;
+      });
+    },
+    async loadMore() {
+      this.busy = true;
+      console.log("我是懒加载")
+      let furl = this.obj.file;
+      furl = Base64.encode(furl);
+      let dataobj = await getPdfImage({ nrwj: furl, page: this.pages++ });
+      if (dataobj.success == true) {
+        this.resimages.push(dataobj.data);
+        this.busy = false;
+      } else {
+        this.$message({
+          message: dataobj.msg,
+          type: "warning"
+        });
+      }
+    },
+    reset() {
+      this.pages = 0;
+      this.busy = false;
+      this.resimages = [];
+      this.isfirst = true;
+
+      // if(this.isfirst){
+      //   this.loadMore();
+      //   this.isfirst = false;
+      // }
     }
   },
   mounted() {},
   computed: {
+    defaultsort() {
+      if (this.obj && this.obj.sortstr && this.obj.sortstr != "") {
+        let sortarr = [];
+        let finx = this.obj.sortstr.indexOf("nrwj");
+        let vinx = this.obj.sortstr.indexOf("spwj");
+        let pinx = this.obj.sortstr.indexOf("tpwj");
+
+        let arr = [];
+        if (this.obj.file) {
+          arr.push({ inx: finx, text: "nrwj" });
+        }
+        if (this.obj.video) {
+          arr.push({ inx: vinx, text: "spwj" });
+        }
+        if (this.obj.pic) {
+          arr.push({ inx: pinx, text: "tpwj" });
+        }
+
+        arr.sort((a, b) => {
+          return a.inx - b.inx;
+        });
+        for (let a of arr) {
+          sortarr.push(a.text);
+        }
+        return sortarr;
+      } else if (this.obj) {
+        let ifarr = [];
+        if (this.obj.file) {
+          ifarr.push("nrwj");
+        }
+        if (this.obj.video) {
+          ifarr.push("spwj");
+        }
+        if (this.obj.pic) {
+          ifarr.push("tpwj");
+        }
+        return ifarr;
+      }
+      return ["nrwj", "tpwj", "spwj"];
+    },
     fileurl() {
+      this.reset();
       if (this.obj.file) {
+        // this.loadFile("/cms/webfile/" + this.obj.file);
         return "/cms/webfile/" + this.obj.file;
       }
       return "";
@@ -93,8 +216,9 @@ export default {
     //     if (this.obj.file.indexOf(".pdf") >= 0) {
     //       ispdf = 1;
     //       this.loadingpdf = true;
-    //       this.loadTask = pdf.createLoadingTask(this.obj.file);
-    //       this.loadTask.then(res => {
+    //       this.loadTask = pdf.createLoadingTask("/cms/webfile/" + this.obj.file);
+    //       // console.log(this.loadTask)
+    //       this.loadTask.promise.then(res => {
     //         this.numPages = res.numPages;
     //         ////
     //         this.loadingpdf = false;
@@ -127,8 +251,13 @@ export default {
     text-align: center;
     display: block;
   }
-  .ifas {
+  .ifas-container {
     height: calc(100% - 149px);
+    width: 100%;
+    overflow: auto;
+  }
+  .ifas {
+    height: calc(100% - 14px) !important;
     width: 95%;
     margin: 20px auto;
     border: dotted 1px #e1ff0f;
@@ -137,6 +266,14 @@ export default {
       height: 100%;
       object-fit: fill;
     }
+  }
+  .imgs {
+    text-align: center;
+    img {
+      width: 60%;
+    }
+    //overflow: auto;
+    //height:100%;
   }
   .cms-d-tags {
     text-align: center;

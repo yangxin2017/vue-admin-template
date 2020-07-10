@@ -14,20 +14,20 @@
       </div>
     </div>
     <div class="cms-panel-content">
-      <div ref="mapdom" class="map1" v-if="curType=='hai'">
+      <div ref="mapdom" class="map1" :class="{onlymg: curItem.title == '中美博弈', onlyth: curItem.title == '台海局势'}" v-if="curType=='hai'">
         <span
           @click="changeHAI(item.id.value, item.text)"
           v-for="item in hais"
           :key="item.id.value"
-          :class="[item.id.value, 'txt', curHai==item.id.value ? 'sel' : '']"
+          :class="[item.id.value, 'txt', curHai==item.id.value ? 'sel' : '', (curItem.title != '台海局势' || item.text == '台海局势') ? 'show-mod' : 'hide-mod']"
         >{{item.text}}</span>
       </div>
-      <div class="map2" v-if="curType=='guo'">
+      <div class="map2" :class="{onlymg: curItem.title == '中美博弈', onlyth: curItem.title == '台海局势'}" v-if="curType=='guo'">
         <span
           @click="changeGJ(item.id.value, item.text)"
           v-for="item in guos"
           :key="item.id.value"
-          :class="[item.id.value, 'txt', curGj==item.id.value ? 'sel' : '']"
+          :class="[item.id.value, 'txt', curGj==item.id.value ? 'sel' : '', (curItem.title != '中美博弈' || item.text == '美国') ? 'show-mod' : 'hide-mod']"
         >{{item.text}}</span>
       </div>
       <div class="map-data">
@@ -77,24 +77,26 @@ export default {
         children: []
       },
       curCid: -1,
-      curGj: "meiguo",
-      curHai: "bohai",
+      curGj: "all",
+      curHai: "all",
       curType: "hai",
-      showtext: "渤海方向",
+      showtext: "战场动向",
       guos: [],
       hais: [],
-      lists: []
+      lists: [],
+      curItem: {}
     };
   },
   methods: {
     changeTab(item) {
+      this.curItem = item;
       this.curCid = item.id;
       this.curType = item.type;
       ////
-      this.curGj = "meiguo";
-      this.curHai = "bohai";
+      this.curGj = "all"
+      this.curHai = "all";
       let key = item.type == "guo" ? this.curGj : this.curHai;
-      this.showtext = item.datas[key].text;
+      this.showtext = key ? item.datas[key].text : item.name;
 
       this.setContent();
     },
@@ -110,7 +112,7 @@ export default {
 
       this.setContent();
     },
-    setContent() {
+    async setContent() {
       let obj = null;
       for (let c of this.datas.children) {
         if (c.id == this.curCid) {
@@ -129,7 +131,7 @@ export default {
       if (!dd || dd.lists.length == 0) {
         getContents({
           cid: this.curCid,
-          gjmc: this.curType == "guo" ? this.curGj : this.curHai,
+          gjmc: this.curType == "guo" ? (this.curGj != 'all' ? this.curGj : undefined) : (this.curHai != "all" ? this.curHai : undefined),
           pagesize: 5
         }).then(res => {
           let arr = [];
@@ -141,6 +143,7 @@ export default {
           this.lists = arr;
         });
       } else {
+
         this.lists = dd.lists;
       }
     },
@@ -172,6 +175,7 @@ export default {
           for (let d of gs.data[type]) {
             tmp.datas[d.id.value] = { text: d.text, lists: [] };
           }
+          tmp.datas['all'] = { text: d.name, lists: [] }
 
           this.datas.children.push(tmp);
         }
@@ -204,6 +208,18 @@ export default {
 }
 .map1 {
   background: url("../../../assets/cms/content/map1.png") no-repeat 0 0;
+  &.onlymg{
+    background: url("../../../assets/cms/content/meiguo.png") no-repeat 0 0;
+  }
+  &.onlyth{
+    background: url("../../../assets/cms/content/taihai.png") no-repeat 0 0;
+    .taihai{
+      display:block;
+    }
+  }
+  .hide-mod{
+    display:none;
+  }
   width: 409px;
   height: 301px;
   float: left;
@@ -226,32 +242,46 @@ export default {
     }
   }
   .zhongyin {
-    left: 117px;
-    top: 65px;
+    left: 125px;
+    top: 73px;
   }
   .bohai {
-    left: 243px;
-    top: 47px;
+    left: 248px;
+    top: 44px;
   }
   .chaoxian {
     left: 317px;
     top: 43px;
   }
   .donghai {
-    left: 329px;
-    top: 100px;
+    left: 340px;
+    top: 131px;
   }
   .huanghai {
-    left: 237px;
-    top: 108px;
+    left: 340px;
+    top: 97px;
   }
   .nanhai {
-    left: 213px;
+    left: 221px;
     top: 143px;
+  }
+  .taihai{
+    left: 234px;
+    top: 108px;
+    display:none;
   }
 }
 .map2 {
   background: url("../../../assets/cms/content/map2.png") no-repeat 0 0;
+  &.onlymg{
+    background: url("../../../assets/cms/content/meiguo.png") no-repeat 0 0;
+  }
+  &.onlyth{
+    background: url("../../../assets/cms/content/taihai.png") no-repeat 0 0;
+  }
+  .hide-mod{
+    display:none;
+  }
   width: 582px;
   height: 289px;
   float: left;

@@ -20,6 +20,8 @@ export function setUserId(userId) {
 }
 
 export function removeToken() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("qbbs");
   return Cookies.remove(TokenKey)
   return Cookies.remove(UserIdKey)
 }
